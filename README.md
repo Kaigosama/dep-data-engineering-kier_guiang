@@ -2,7 +2,7 @@
 
 ## Problem Statement
 
-I want to answer: "Can the Philippines' next quarter's national underemployment rate be predicted using past underemployment trends, GDP growth, and inflation (CPI), and does economic growth always lead to better employment outcomes or there is 'jobless growth'?"
+I want to answer: "Can national GDP growth and CPI inflation predict whether the Philippines' underemployment rate will rise or fall?"
 
 ## Audience
 
