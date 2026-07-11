@@ -2,7 +2,9 @@
 
 ## Problem Statement
 
-I want to answer: "Can national GDP growth and CPI inflation predict whether the Philippines' underemployment rate will rise or fall?"
+I want to answer: "Can quarter-to-quarter changes in the Philippines' national underemployment rate be anticipated from GDP growth and inflation (CPI)?"
+
+Underemployment — employed people who still want more hours or a better job — is a core measure of job quality, and in the Philippines it stays high even in years of strong economic growth, a pattern often called "jobless growth." Headline GDP and inflation figures dominate economic news, but it is not obvious whether faster growth or rising prices actually move underemployment, or in which direction. Reading how these indicators track underemployment quarter to quarter would give an early signal of labor-market slack before the next survey round is released. By analyzing GDP growth, inflation (CPI), and past underemployment together over time, this project aims to show whether these indicators anticipate movements in underemployment and whether economic growth reliably translates into better work opportunities — insights useful to labor and economic planners such as DOLE and NEDA.
 
 ## Audience
 
@@ -67,4 +69,3 @@ The dashboard should help the audience quickly see whether the current quarter's
   - Access is subscription-gated with a capped free view.
   - The monthly underemployment series only starts in 2021, shrinking the usable sample versus PSA's 2005 history.
   - The GDP figure is quarterly year-on-year growth (not quarter-on-quarter).
-  
