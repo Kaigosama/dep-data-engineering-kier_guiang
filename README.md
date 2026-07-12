@@ -14,14 +14,6 @@ This project is for labor policy researchers, national government agencies such 
 
 The main metric I want to track is **national underemployment rate (%)**, including its **one-quarter-ahead forecast**, alongside a derived **"growth-employment gap" indicator**, calculated as the GDP growth rate minus the change in the underemployment rate, to identify periods when economic growth does not correspond with improvements in job quality.
 
-## Likely Data Source
-
-I will explore:
-
-- **PSA OpenSTAT — Labor Force Survey (Labor and Employment category) for national underemployment rate**: [openstat.psa.gov.ph/Database/Labor-and-Employment](https://openstat.psa.gov.ph/Database/Labor-and-Employment)
-- **PSA OpenSTAT — National Accounts of the Philippines (GDP)**: [openstat.psa.gov.ph/Database/Economic-Accounts/National-Accounts-of-the-Philippines/Annual-National-Accounts](https://openstat.psa.gov.ph/Database/Economic-Accounts/National-Accounts-of-the-Philippines/Annual-National-Accounts)
-- **PSA OpenSTAT — Consumer Price Index for All Income Households**: [openstat.psa.gov.ph/PXWeb/pxweb/en/DB/DB__2M__PI__CPI__2018/?tablelist=true](https://openstat.psa.gov.ph/PXWeb/pxweb/en/DB/DB__2M__PI__CPI__2018/?tablelist=true)
-
 ## Possible Final Dashboard
 
 The dashboard should help the audience quickly see whether the current quarter's GDP growth and inflation trends point to rising or falling underemployment next quarter, and flag any period where growth is happening without a corresponding improvement in job quality.
