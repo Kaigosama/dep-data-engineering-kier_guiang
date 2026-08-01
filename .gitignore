@@ -1,0 +1,16 @@
+# Python
+venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Secrets
+.env
+
+# OS
+Thumbs.db
+.DS_Store
+
+# NOTE: data/raw/ is deliberately NOT ignored.
+# The Milestone 2 deliverable requires sample raw pulls to be committed,
+# so the raw extracts in data/raw/ are tracked on purpose.
