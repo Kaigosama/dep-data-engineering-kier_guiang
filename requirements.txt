@@ -1,0 +1,6 @@
+# Phase 2 - Data Ingestion
+# ingest.py uses only `requests` plus the Python standard library.
+requests>=2.32
+
+# Phase 3 - Data Transformation (added when transform.py is written)
+# pandas>=2.2
