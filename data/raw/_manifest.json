@@ -1,0 +1,594 @@
+[
+  {
+    "name": "lfs_underemployment",
+    "chunk": 1,
+    "chunks_total": 2,
+    "table_id": "0021B3FKEI2.px",
+    "title": "Rates Key Employment Indicators: April 2005 to May 2026",
+    "source_url": "https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/1B/LFS/0021B3FKEI2.px",
+    "query_body": {
+      "query": [
+        {
+          "code": "Rates",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0",
+              "1",
+              "2",
+              "3"
+            ]
+          }
+        },
+        {
+          "code": "Sex",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0"
+            ]
+          }
+        },
+        {
+          "code": "Year",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15",
+              "16",
+              "17",
+              "18"
+            ]
+          }
+        },
+        {
+          "code": "Month",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12"
+            ]
+          }
+        }
+      ],
+      "response": {
+        "format": "csv"
+      }
+    },
+    "retrieved_at_utc": "2026-08-01T09:49:46+00:00",
+    "http_status": 200,
+    "cells_requested": 988,
+    "output_file": "lfs_underemployment_0021B3FKEI2_2026-08-01_part1.csv",
+    "metadata_file": "lfs_underemployment_0021B3FKEI2_2026-08-01_meta.json",
+    "bytes": 8611,
+    "sha256": "08a2a3f2eb2c961a90b57310b729bd72073bc1d36336117be63febaf5e453cb5",
+    "note": "Target variable. 4 x 1 x 22 x 13 = 1144 cells -> exceeds maxValues, gets chunked."
+  },
+  {
+    "name": "lfs_underemployment",
+    "chunk": 2,
+    "chunks_total": 2,
+    "table_id": "0021B3FKEI2.px",
+    "title": "Rates Key Employment Indicators: April 2005 to May 2026",
+    "source_url": "https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/1B/LFS/0021B3FKEI2.px",
+    "query_body": {
+      "query": [
+        {
+          "code": "Rates",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0",
+              "1",
+              "2",
+              "3"
+            ]
+          }
+        },
+        {
+          "code": "Sex",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0"
+            ]
+          }
+        },
+        {
+          "code": "Year",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "19",
+              "20",
+              "21"
+            ]
+          }
+        },
+        {
+          "code": "Month",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12"
+            ]
+          }
+        }
+      ],
+      "response": {
+        "format": "csv"
+      }
+    },
+    "retrieved_at_utc": "2026-08-01T09:49:46+00:00",
+    "http_status": 200,
+    "cells_requested": 156,
+    "output_file": "lfs_underemployment_0021B3FKEI2_2026-08-01_part2.csv",
+    "metadata_file": "lfs_underemployment_0021B3FKEI2_2026-08-01_meta.json",
+    "bytes": 1722,
+    "sha256": "d3b6061ccddf0b1cb2d1b0dd173ccb85f5b254dede2816b2efc3af2c2544e315",
+    "note": "Target variable. 4 x 1 x 22 x 13 = 1144 cells -> exceeds maxValues, gets chunked."
+  },
+  {
+    "name": "qna_gdp_growth",
+    "chunk": 1,
+    "chunks_total": 1,
+    "table_id": "0062B5BPRQ2.px",
+    "title": "Gross National Income and Gross Domestic Product by Industry, Growth Rates",
+    "source_url": "https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/2B/NA/QT/1SUM/0062B5BPRQ2.px",
+    "query_body": {
+      "query": [
+        {
+          "code": "Industry",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "18"
+            ]
+          }
+        },
+        {
+          "code": "Type of Valuation",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "1"
+            ]
+          }
+        },
+        {
+          "code": "Year",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15",
+              "16",
+              "17",
+              "18",
+              "19",
+              "20",
+              "21",
+              "22",
+              "23",
+              "24",
+              "25"
+            ]
+          }
+        },
+        {
+          "code": "Period",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0",
+              "1",
+              "2",
+              "3"
+            ]
+          }
+        }
+      ],
+      "response": {
+        "format": "csv"
+      }
+    },
+    "retrieved_at_utc": "2026-08-01T09:49:47+00:00",
+    "http_status": 200,
+    "cells_requested": 104,
+    "output_file": "qna_gdp_growth_0062B5BPRQ2_2026-08-01.csv",
+    "metadata_file": "qna_gdp_growth_0062B5BPRQ2_2026-08-01_meta.json",
+    "bytes": 4517,
+    "sha256": "54fbc153fb5e728b10fa2a5549bc540922040b8a228de54694a8ed4675bd56ec",
+    "note": "PSA's published growth rate. NOTE its Year values are pairs ('2000-2001'), i.e. these are YEAR-ON-YEAR growth rates per quarter, not quarter-on-quarter. Hence the levels table below."
+  },
+  {
+    "name": "qna_gdp_levels",
+    "chunk": 1,
+    "chunks_total": 1,
+    "table_id": "0052B5BPRQ1.px",
+    "title": "Gross National Income and Gross Domestic Product by Industry",
+    "source_url": "https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/2B/NA/QT/1SUM/0052B5BPRQ1.px",
+    "query_body": {
+      "query": [
+        {
+          "code": "Industry",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "18"
+            ]
+          }
+        },
+        {
+          "code": "Type of Valuation",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "1"
+            ]
+          }
+        },
+        {
+          "code": "Year",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15",
+              "16",
+              "17",
+              "18",
+              "19",
+              "20",
+              "21",
+              "22",
+              "23",
+              "24",
+              "25",
+              "26"
+            ]
+          }
+        },
+        {
+          "code": "Period",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0",
+              "1",
+              "2",
+              "3"
+            ]
+          }
+        }
+      ],
+      "response": {
+        "format": "csv"
+      }
+    },
+    "retrieved_at_utc": "2026-08-01T09:49:47+00:00",
+    "http_status": 200,
+    "cells_requested": 108,
+    "output_file": "qna_gdp_levels_0052B5BPRQ1_2026-08-01.csv",
+    "metadata_file": "qna_gdp_levels_0052B5BPRQ1_2026-08-01_meta.json",
+    "bytes": 4561,
+    "sha256": "fb47f11e0b2f0a687dc910d93d17251ec4673c4bfafbd87e03ff16de1265cb70",
+    "note": "Levels at constant 2018 prices, so transform can compute true QoQ growth."
+  },
+  {
+    "name": "cpi_index_2018_2025",
+    "chunk": 1,
+    "chunks_total": 1,
+    "table_id": "0012M4ACP09.px",
+    "title": "Consumer Price Index for All Income Households by Commodity Group (2018=100): January 2018 - December 2025",
+    "source_url": "https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/2M/PI/CPI/2018/0012M4ACP09.px",
+    "query_body": {
+      "query": [
+        {
+          "code": "Geolocation",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0"
+            ]
+          }
+        },
+        {
+          "code": "Commodity Description",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0"
+            ]
+          }
+        },
+        {
+          "code": "Year",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7"
+            ]
+          }
+        },
+        {
+          "code": "Period",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12"
+            ]
+          }
+        }
+      ],
+      "response": {
+        "format": "csv"
+      }
+    },
+    "retrieved_at_utc": "2026-08-01T09:49:56+00:00",
+    "http_status": 200,
+    "cells_requested": 104,
+    "output_file": "cpi_index_2018_2025_0012M4ACP09_2026-08-01.csv",
+    "metadata_file": "cpi_index_2018_2025_0012M4ACP09_2026-08-01_meta.json",
+    "bytes": 2976,
+    "sha256": "d15c720bd3db3af34b01d5593a6b6250438dcc29adb4d0f4ebf2538c8e5dfd73",
+    "note": "Current CPI index, Jan 2018 - Dec 2025."
+  },
+  {
+    "name": "cpi_index_backcast_1994_2017",
+    "chunk": 1,
+    "chunks_total": 1,
+    "table_id": "0012M4ACP15.px",
+    "title": "Consumer Price Index for All Income Households by Commodity Group (2018=100): January 1994 - December 2017 (Backcasted Values)",
+    "source_url": "https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/2M/PI/CPI/2018/0012M4ACP15.px",
+    "query_body": {
+      "query": [
+        {
+          "code": "Geolocation",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0"
+            ]
+          }
+        },
+        {
+          "code": "Commodity Description",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0"
+            ]
+          }
+        },
+        {
+          "code": "Year",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15",
+              "16",
+              "17",
+              "18",
+              "19",
+              "20",
+              "21",
+              "22",
+              "23"
+            ]
+          }
+        },
+        {
+          "code": "Period",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12"
+            ]
+          }
+        }
+      ],
+      "response": {
+        "format": "csv"
+      }
+    },
+    "retrieved_at_utc": "2026-08-01T09:49:56+00:00",
+    "http_status": 200,
+    "cells_requested": 312,
+    "output_file": "cpi_index_backcast_1994_2017_0012M4ACP15_2026-08-01.csv",
+    "metadata_file": "cpi_index_backcast_1994_2017_0012M4ACP15_2026-08-01_meta.json",
+    "bytes": 8806,
+    "sha256": "5fef8724283eb6a08a3aa717ea7c6082eebaa8114ee7314e3bf8f279807f7036",
+    "note": "Backcasted CPI index, Jan 1994 - Dec 2017. Same 2018=100 base, so it joins cleanly onto the table above."
+  },
+  {
+    "name": "cpi_yoy_official_validation",
+    "chunk": 1,
+    "chunks_total": 1,
+    "table_id": "0012M4ACP10.px",
+    "title": "Year-on-Year Changes of the Consumer Price Index in Percent by Commodity Group (2018=100): January 2019 - December 2025",
+    "source_url": "https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB/2M/PI/CPI/2018/0012M4ACP10.px",
+    "query_body": {
+      "query": [
+        {
+          "code": "Geolocation",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0"
+            ]
+          }
+        },
+        {
+          "code": "Commodity Description",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0"
+            ]
+          }
+        },
+        {
+          "code": "Year",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6"
+            ]
+          }
+        },
+        {
+          "code": "Period",
+          "selection": {
+            "filter": "item",
+            "values": [
+              "0",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12"
+            ]
+          }
+        }
+      ],
+      "response": {
+        "format": "csv"
+      }
+    },
+    "retrieved_at_utc": "2026-08-01T09:49:57+00:00",
+    "http_status": 200,
+    "cells_requested": 91,
+    "output_file": "cpi_yoy_official_validation_0012M4ACP10_2026-08-01.csv",
+    "metadata_file": "cpi_yoy_official_validation_0012M4ACP10_2026-08-01_meta.json",
+    "bytes": 1435,
+    "sha256": "3297e1373463d613d81e9baeec78d527fc992acd2d772bdd1ca5b26b598cd45e",
+    "note": "NOT a model input. PSA's official YoY inflation, 2019-2025, kept only to check our computed inflation against on the overlap."
+  }
+]
