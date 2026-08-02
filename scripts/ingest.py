@@ -137,6 +137,11 @@ import requests
 
 BASE_URL = "https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB"
 
+# Goes at the front of every raw filename so the SOURCE is readable from the
+# filename alone, without opening the manifest. Raw landing files are named
+# <source>_<dataset>_<table_id>_<pull_date>.csv
+SOURCE_SLUG = "psa_openstat"
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 RAW_DATA_DIR = PROJECT_ROOT / "data" / "raw"
 MANIFEST_PATH = RAW_DATA_DIR / "_manifest.json"
@@ -604,7 +609,12 @@ def build_query_body(selection: list[dict[str, Any]]) -> dict:
 
 
 def _stem(spec: TableSpec, today: str) -> str:
-    return f"{spec.name}_{spec.table_id.replace('.px', '')}_{today}"
+    """Filename stem: source, dataset, PSA table id, and pull date.
+
+    Every raw landing file names where it came from and when it was pulled, so a
+    file is traceable on its own even if it is copied out of this repo.
+    """
+    return f"{SOURCE_SLUG}_{spec.name}_{spec.table_id.replace('.px', '')}_{today}"
 
 
 def fetch_table(
