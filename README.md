@@ -158,13 +158,24 @@ Read live from `/api/v1/en/?config`: `{"maxValues": 1000, "maxCalls": 10, "timeW
 
 ### Output and provenance
 
+Raw landing files are named `<source>_<dataset>_<psa_table_id>_<pull_date>.csv`, so the source and
+the pull date are readable from the filename alone:
+
 ```text
-data/raw/
-  <name>_<table_id>_<YYYY-MM-DD>.csv         raw response, byte-for-byte
-  <name>_<table_id>_<YYYY-MM-DD>_part1.csv   when a query had to be split
-  <name>_<table_id>_<YYYY-MM-DD>_meta.json   table metadata as of that pull
-  _manifest.json
+data/
+  data_dictionary.md                          fields, types and ERD for everything below
+  raw/
+    psa_openstat_<dataset>_<table_id>_<YYYY-MM-DD>.csv        raw response, byte-for-byte
+    psa_openstat_<dataset>_<table_id>_<YYYY-MM-DD>_part1.csv  when a query had to be split
+    psa_openstat_<dataset>_<table_id>_<YYYY-MM-DD>_meta.json  table metadata as of that pull
+    _manifest.json
 ```
+
+Example: `psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv`
+
+**See [`data/data_dictionary.md`](data/data_dictionary.md)** for every field, its type and unit, the
+entity-relationship diagram, and the conventions (missing-value markers, wide vs long layouts,
+aggregate rows) that `transform.py` will need to respect.
 
 `_manifest.json` records, per pull: table id, resolved title, **full source URL**, the **exact POST
 body sent**, UTC **retrieval timestamp**, HTTP status, cell count, byte size and SHA-256. That is
