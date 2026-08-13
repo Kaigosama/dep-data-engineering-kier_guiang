@@ -82,6 +82,7 @@ import hashlib
 import json
 import re
 import sys
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -865,15 +866,20 @@ def build_analysis(fact: pd.DataFrame, dim_quarter: pd.DataFrame,
     return analysis
 
 
-def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Reshape data/raw into data/processed.")
-    parser.add_argument("--profile", action="store_true",
-                        help="print head/info/describe/value_counts and exit codes 0")
-    parser.add_argument("--quiet", action="store_true", help="suppress the check log")
-    args = parser.parse_args(argv)
+def sha256_of(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
-    PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
-    files = resolve_latest_raw_files()
+
+def run_pipeline(files: dict[str, list[Path]], out_dir: Path,
+                 *, want_profile: bool = False) -> dict:
+    """Build the processed layer and write it into out_dir.
+
+    Parameterised on the output directory so the whole pipeline can be run into
+    a scratch directory and compared against the committed one - which is what
+    --check-reproducible does. A pipeline hardwired to one output path can only
+    be tested by overwriting the thing you are testing against.
+    """
+    out_dir.mkdir(parents=True, exist_ok=True)
 
     # full_frame spans 1994Q1-2026Q4; frame is the 83-quarter modelling window.
     # Lags are taken from full_frame so the first window quarter keeps the real
@@ -883,7 +889,7 @@ def main(argv: list[str] | None = None) -> int:
     fact = build_fact(frame, files)
     checks = validate(frame, fact, diagnostics)
 
-    if args.profile:
+    if want_profile:
         profile(files, frame)
 
     # ---- dim_quarter ----
@@ -920,28 +926,28 @@ def main(argv: list[str] | None = None) -> int:
 
     outputs = {
         "dim_quarter.csv": write_csv(
-            PROCESSED_DIR / "dim_quarter.csv",
+            out_dir / "dim_quarter.csv",
             ["quarter_id", "year", "quarter_num", "quarter_start_date",
              "quarter_end_date", "lfs_round_month"],
             dim_quarter_rows),
         "dim_indicator.csv": write_csv(
-            PROCESSED_DIR / "dim_indicator.csv",
+            out_dir / "dim_indicator.csv",
             ["indicator_code", "indicator_label", "unit", "source_dataset",
              "source_table_id", "native_frequency", "aggregation_method",
              "is_model_input"],
             dim_indicator_rows),
         "fact_indicator_quarter.csv": write_csv(
-            PROCESSED_DIR / "fact_indicator_quarter.csv",
+            out_dir / "fact_indicator_quarter.csv",
             ["quarter_id", "indicator_code", "value", "value_status", "source_file"],
             [[row.quarter_id, str(row.indicator_code), fmt(row.value),
               row.value_status, row.source_file] for row in fact.itertuples()]),
         "analysis_quarterly.csv": write_csv(
-            PROCESSED_DIR / "analysis_quarterly.csv", analysis_header, analysis_rows),
+            out_dir / "analysis_quarterly.csv", analysis_header, analysis_rows),
     }
 
     # The run timestamp lives here and nowhere else, so the four CSVs stay
     # byte-identical across reruns and a rerun shows up as a clean git diff.
-    REPORT_PATH.write_text(json.dumps({
+    (out_dir / REPORT_PATH.name).write_text(json.dumps({
         "generated_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "pandas_version": pd.__version__,
         "window": {"start": WINDOW_START, "end": WINDOW_END, "quarters": len(frame)},
@@ -957,15 +963,83 @@ def main(argv: list[str] | None = None) -> int:
         "checks_passed": checks,
     }, indent=2), encoding="utf-8")
 
+    return {"outputs": outputs, "checks": checks, "diagnostics": diagnostics,
+            "quarters": len(frame), "fact_rows": len(fact)}
+
+
+def check_reproducible(files: dict[str, list[Path]]) -> int:
+    """Rebuild into a scratch directory and compare with data/processed.
+
+    "Same input, same output every time" is the claim; this is the test. It runs
+    the whole pipeline again somewhere else and compares checksums, so it catches
+    two different failures at once:
+
+      * non-determinism in the transform - dict ordering, unstable sorts, a
+        timestamp leaking into a data file;
+      * drift between the committed dataset and what the current code produces,
+        which is what happens when someone edits the transform and forgets to
+        regenerate.
+
+    _transform_report.json is deliberately excluded: it records the run time, so
+    it SHOULD differ between runs. Reproducibility means the data is stable, not
+    that every byte on disk is frozen.
+    """
+    absent = [name for name in OUTPUT_FILES if not (PROCESSED_DIR / name).exists()]
+    if absent:
+        raise TransformError(
+            f"Nothing to compare against - missing {absent} in {PROCESSED_DIR.name}/.\n"
+            f"    Run 'python scripts/transform.py' first."
+        )
+
+    committed = {name: sha256_of(PROCESSED_DIR / name) for name in OUTPUT_FILES}
+    with tempfile.TemporaryDirectory(prefix="transform-check-") as scratch:
+        rebuilt = run_pipeline(files, Path(scratch))["outputs"]
+
+    print("reproducibility check: rebuilt into a scratch directory and compared\n")
+    drifted = []
+    for name in OUTPUT_FILES:
+        same = committed[name] == rebuilt[name]
+        print(f"  {'same ' if same else 'DIFF '} {name:<30} {committed[name][:12]}")
+        if not same:
+            drifted.append(name)
+
+    if drifted:
+        print(f"\n{len(drifted)} file(s) differ from data/processed: {drifted}")
+        print("Either the transform is not deterministic, or the committed dataset "
+              "is stale.\nRe-run 'python scripts/transform.py' and inspect "
+              "'git diff data/processed'.")
+        return 1
+
+    print(f"\nall {len(OUTPUT_FILES)} files identical - the transform is reproducible")
+    print(f"({REPORT_PATH.name} is excluded: it records the run timestamp)")
+    return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Reshape data/raw into data/processed.")
+    parser.add_argument("--profile", action="store_true",
+                        help="print head/info/describe/value_counts while transforming")
+    parser.add_argument("--check-reproducible", action="store_true",
+                        help="rebuild elsewhere and compare; writes nothing, exits 1 on drift")
+    parser.add_argument("--quiet", action="store_true", help="suppress the check log")
+    args = parser.parse_args(argv)
+
+    files = resolve_latest_raw_files()
+
+    if args.check_reproducible:
+        return check_reproducible(files)
+
+    result = run_pipeline(files, PROCESSED_DIR, want_profile=args.profile)
+
     if not args.quiet:
         print(f"transform -> {PROCESSED_DIR}")
-        for check in checks:
+        for check in result["checks"]:
             print(f"  [ok] {check}")
         print()
-        for name, digest in outputs.items():
+        for name, digest in result["outputs"].items():
             print(f"  {name:<30} {digest[:12]}")
-    print(f"\n{len(frame)} quarters x {len(CODES)} indicators -> {len(fact)} fact rows. "
-          f"Report: {REPORT_PATH.name}")
+    print(f"\n{result['quarters']} quarters x {len(CODES)} indicators -> "
+          f"{result['fact_rows']} fact rows. Report: {REPORT_PATH.name}")
     return 0
 
 
