@@ -151,8 +151,15 @@ Read live from `/api/v1/en/?config`: `{"maxValues": 1000, "maxCalls": 10, "timeW
    single data row. The transform must handle both.
 4. **GDP growth is year-on-year, not quarter-on-quarter.** Its `Year` values are pairs
    (`2000-2001` … `2025-2026`), i.e. each quarter compared with the same quarter a year earlier.
-   The problem statement above says "quarter-to-quarter" — `qna_gdp_levels` is pulled so true QoQ
-   can be derived if that is what is wanted. **This needs an explicit decision in Phase 3.**
+   The second year of the pair is the observation year: `2025-2026 Q1` is Q1 2026. An off-by-one
+   parse here is silent and fatal, so `transform.py` asserts `2026 Q1 == 2.8` as a canary.
+   **Decided in Phase 3 (Week 7):** the problem statement's "quarter-to-quarter" describes the
+   *target* — the change in the underemployment rate — not the predictors' base period. GDP growth
+   enters the model on PSA's published **year-on-year** basis, alongside its one-quarter
+   acceleration. The reasoning, and the measurements behind it, are in
+   [`data/data_dictionary.md`](data/data_dictionary.md#processed-layer-schema-phase-3-plan).
+   `qna_gdp_levels` is still used, but only to compute a diagnostic QoQ column that is explicitly
+   flagged as not a model input.
 5. **Missing values arrive as `.`** — meaningful (the survey did not run), preserved verbatim.
 6. **The usable modelling window ends 2025Q4**, bounded by CPI (ends Dec 2025), not by LFS (May 2026).
 
@@ -183,3 +190,59 @@ the source-and-access-date record for every file, and it makes any pull reproduc
 against a later one.
 
 Raw extracts are committed on purpose — `.gitignore` deliberately does **not** exclude `data/raw/`.
+
+## Processed Data Plan (Phase 3, Week 7)
+
+Full schema — every column, type, key and null expectation — is in
+**[`data/data_dictionary.md` → Processed layer schema](data/data_dictionary.md#processed-layer-schema-phase-3-plan)**.
+Summary:
+
+### Main table
+
+- **Name:** `data/processed/analysis_quarterly.csv`
+- **Grain:** one row = **one quarter**, national
+- **Primary key:** `quarter_id` (`YYYYQn`, e.g. `2005Q2`)
+- **Window:** 2005Q2 – 2025Q4, **83 quarters, no gaps** — bounded below by the start of the LFS
+  (April 2005) and above by the end of CPI coverage (December 2025)
+
+### Important columns
+
+| Column | Meaning | Expected type |
+| --- | --- | --- |
+| `quarter_id` | quarter identifier, `YYYYQn` | string |
+| `quarter_num` | 1–4; source of the seasonal dummies | integer |
+| `underemployment_rate_pct` | the headline level | float |
+| `underemployment_change_qoq_pp` | `rate(t) − rate(t−1)` — **the model target** | float |
+| `gdp_growth_yoy_pct` | PSA published YoY growth, constant 2018 prices — **predictor** | float |
+| `gdp_growth_yoy_accel_pp` | `yoy(t) − yoy(t−1)` — **predictor** | float |
+| `inflation_yoy_pct` | computed from the stitched 1994–2025 CPI index — **predictor** | float |
+| `inflation_yoy_accel_pp` | `yoy(t) − yoy(t−1)` — **predictor** | float |
+| `naive_forecast_change_pp` | ≡ 0, the no-change baseline the model must beat | float |
+| `growth_employment_gap` | `gdp_growth_yoy_pct − underemployment_change_yoy_pp` — the dashboard KPI | float |
+
+### Related tables
+
+The six raw extracts share no key and are not even the same shape, so they are combined through a
+small star schema rather than joined directly:
+
+- `dim_quarter` — one row per quarter; joins on `quarter_id`
+- `dim_indicator` — one row per indicator; joins on `indicator_code`; carries `is_model_input`
+- `fact_indicator_quarter` — one row per indicator per quarter, PK `(quarter_id, indicator_code)`;
+  this is where the six sources actually meet
+- `analysis_quarterly` — a pivot of the fact, not a second source of truth
+
+`scripts/load_db.py` will load all four into `data/processed/underemployment.db` (SQLite) with
+explicit `PRIMARY KEY` / `FOREIGN KEY` DDL, so the keys are enforced rather than just documented.
+
+### Two decisions worth flagging
+
+- **The target is quarter-to-quarter; the predictors are year-on-year.** Measured on the raw data,
+  23 % of the variance in the underemployment rate's QoQ change is seasonal — workable with quarter
+  dummies. For GDP's QoQ change computed from the unadjusted levels table it is **94 %**. So the
+  target keeps the QoQ basis the problem statement asks for, while the predictors use PSA's
+  published YoY figures plus their one-quarter accelerations, which are true quarter-to-quarter
+  changes in a series that carries no seasonal.
+- **A null result is a publishable result.** Success is an honest answer benchmarked against the
+  no-change baseline on a chronological split — never a random shuffle. If GDP and CPI do not beat
+  it, that *is* the jobless-growth finding, and the dashboard ships as a growth-employment-gap
+  monitor. This is on record before any model is fitted, on purpose.
