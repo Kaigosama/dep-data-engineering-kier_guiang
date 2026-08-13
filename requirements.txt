@@ -2,5 +2,7 @@
 # ingest.py uses only `requests` plus the Python standard library.
 requests>=2.32
 
-# Phase 3 - Data Transformation (added when transform.py is written)
-# pandas>=2.2
+# Phase 3 - Data Transformation
+# transform.py reads and reshapes the raw extracts with pandas.
+# load_db.py and run_sql.py use sqlite3 from the standard library - no driver needed.
+pandas>=2.2
