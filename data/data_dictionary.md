@@ -433,6 +433,122 @@ deliverable. `scripts/load_db.py` loads the four CSVs into `data/processed/under
 described here. The `.db` is a rebuildable build artefact and is gitignored; the CSVs are the
 source of truth.
 
+## Transformation flow
+
+How `scripts/transform.py` turns the six raw extracts into the four processed files.
+Documented here rather than only in code comments so the flow can be repeated, audited, or
+argued with without reading Python.
+
+```text
+data/raw/_manifest.json          which pull is current
+        |
+        v
+  read + reshape        LFS (long)   GDP x2 (wide)   CPI x2 (wide)   CPI official (wide)
+        |                    \            |              /                  |
+        v                     ----> quarterly PeriodIndex <----        validation only
+  derive                       diffs, ratios, accelerations, KPI
+        |
+        v
+  clip to window               2005Q2 - 2025Q4, 83 quarters
+        |
+        +--> dim_quarter ---+
+        +--> dim_indicator  |
+        +--> fact_indicator_quarter
+                            |
+                            +--> pivot + join --> analysis_quarterly
+```
+
+### Step by step
+
+| # | Step | What it does | Why it matters |
+| --- | --- | --- | --- |
+| 1 | Resolve inputs | Reads `_manifest.json`, takes the newest pull per dataset | Never globs a hardcoded date, so a fresh `ingest.py` run is picked up automatically instead of silently reading a stale extract |
+| 2 | Read | `pd.read_csv(encoding="utf-8-sig", na_values=…, keep_default_na=False)` | Strips PXWeb's BOM and turns exactly the documented missing markers into `NaN` — nothing else is guessed at |
+| 3 | Drop aggregates | Removes LFS `Annual` and CPI `Ave` rows | They sit alongside the periods but are annual totals; including them double-counts |
+| 4 | Reshape | LFS filtered to round months; GDP/CPI `melt()`ed from 100+ period columns | The three layouts only become joinable once all are one-row-per-period |
+| 5 | Index | Everything onto a quarterly `PeriodIndex`, reindexed to a complete span | `.shift()` counts **rows**, not quarters — a hole in the index would difference against the wrong period and look correct |
+| 6 | Derive | Diffs, ratios, accelerations, the KPI | Computed on the **full** span, before clipping |
+| 7 | Clip | Restrict to 2005Q2–2025Q4 | Derive first, clip last: GDP and CPI have real 2005Q1 values, so clipping first would discard usable lag features |
+| 8 | Assemble | `dim_quarter`, `dim_indicator`, `fact_indicator_quarter`; then pivot the fact and join the calendar to get `analysis_quarterly` | Makes "analysis_quarterly is a pivot of the fact" true in code, not just in this document |
+| 9 | Validate | See the checks list below | Runs on every execution, in the script — a check that is easy to skip gets skipped |
+| 10 | Write | Four CSVs, then `_transform_report.json` | The run timestamp lives only in the report, so the CSVs stay byte-identical across reruns |
+
+### Missing values — flagged and dropped, never filled
+
+| Situation | Handling | Reasoning |
+| --- | --- | --- |
+| LFS round with no survey (`.`) | Left as `NULL`, `value_status = 'missing'` | A quarter the survey did not run is not a quarter of zero underemployment. Imputing would put invented numbers into the **target**. |
+| GDP quarters not yet published (`..`) | Left as `NULL` | Unpublished is not zero. They fall outside the window anyway. |
+| Derived columns at the window start | Left as `NULL` | An arithmetic consequence of differencing, not a data defect. The expected pattern is asserted, so an unexpected null fails the run. |
+| Partial CPI quarter (1–2 of 3 months) | Quarter dropped | A mean of two months is not comparable with a mean of three. |
+
+**Nothing is ever filled.** No `fillna`, no forward-fill, no interpolation. Every null in
+`data/processed/` means "genuinely absent", and that is the only thing it can mean.
+
+### Duplicates
+
+| Check | Where |
+| --- | --- |
+| `(Year, Month)` after concatenating the two LFS parts | The API split the query along time; overlapping chunks would duplicate whole rows |
+| CPI `(year, month)` across the backcast and current legs | The legs abut at 2017-12 / 2018-01; an overlap would double-count the stitch |
+| `(quarter_id, indicator_code)` in the fact | The composite primary key |
+| Join keys | `merge(validate="one_to_one")` raises if `quarter_id` stops being unique on either side |
+
+All four raise rather than silently de-duplicating. A duplicate here means an upstream
+assumption broke, and quietly dropping it would hide that.
+
+### Type conversions
+
+| From | To | Note |
+| --- | --- | --- |
+| PXWeb strings with `.` / `..` | `float64` with `NaN` | At read time, via `na_values` |
+| `Year` + `Month` / period column labels | `PeriodIndex(freq="Q")` | Makes quarter arithmetic real rather than integer bookkeeping |
+| Quarter boundaries | `datetime64`, rendered ISO at write | Held as dates through the pipeline, formatted only at the boundary |
+| `indicator_code` | ordered `Categorical` | Fixes catalogue order when sorting the fact, so row order is stable across runs |
+
+### Join keys
+
+Both joins that build `analysis_quarterly` use **`quarter_id`** (`YYYYQn`), and it is a valid
+key because it is *constructed*, not inherited: every source is reduced to one row per quarter
+before anything is joined, so uniqueness is guaranteed by the reshaping rather than hoped for.
+`validate="one_to_one"` states that contract in code, and the row count is asserted unchanged
+across the join.
+
+There is no join on a name, a label, or anything PSA controls the spelling of — those drift.
+
+### Derived columns
+
+| Column | Formula | Notes |
+| --- | --- | --- |
+| `underemployment_change_qoq` | `rate(t) − rate(t−1)` | The model target |
+| `underemployment_change_yoy` | `rate(t) − rate(t−4)` | KPI input |
+| `gdp_growth_yoy_accel` | `gdp_growth_yoy(t) − gdp_growth_yoy(t−1)` | A true QoQ change in a seasonally clean series |
+| `inflation_yoy` | `(cpi(t) / cpi(t−4) − 1) × 100` | Written as an explicit ratio, not `pct_change()`, whose `fill_method` behaviour has moved between pandas versions |
+| `inflation_yoy_accel` | `inflation_yoy(t) − inflation_yoy(t−1)` | |
+| `gdp_growth_qoq` | `(gdp_level(t) / gdp_level(t−1) − 1) × 100` | **Diagnostic only.** 94 % calendar — `is_model_input = false` |
+| `growth_employment_gap` | `gdp_growth_yoy + underemployment_change_yoy` | Growth minus the *improvement*; an improvement is a fall, hence the plus |
+| `*_lag1` | predictor at `t−1` | Taken from the full span, so the first window quarter keeps real values |
+| `naive_forecast_change_pp` | `0` | The no-change baseline the model has to beat |
+
+### Validation checks
+
+Run on every execution; any failure aborts before anything is written.
+
+| Check | Current observed value |
+| --- | --- |
+| Quarter grid contiguous | 83 quarters, 2005Q2–2025Q4 |
+| Fact composite key unique | 1 162 rows |
+| Fact → `dim_indicator` integrity | 14 indicators |
+| All indicator columns numeric | no missing markers survived |
+| No infinities from ratio columns | clean |
+| Range bounds per indicator | all inside, incl. the real 2020 COVID outlier |
+| Computed inflation vs PSA published | max **0.042 pp** over 28 quarters (tolerance 0.10) |
+| Round-month vs 3-month mean | mean bias **+1.17 pp**, higher in 17/21 quarters |
+| GDP year-pair canary | 2026Q1 = 2.8 |
+
+Range bounds are set wide enough to admit April 2020's unemployment spike. That figure is
+real, and a bound quietly tightened until an outlier disappears is worse than no bound.
+
 ## Known coverage limits
 
 | Limit | Consequence |
