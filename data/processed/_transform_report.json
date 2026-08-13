@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-08-13T14:53:27+00:00",
+  "generated_at_utc": "2026-08-13T15:00:50+00:00",
   "pandas_version": "3.0.5",
   "window": {
     "start": "2005Q2",
@@ -88,7 +88,7 @@
     "employment_rate within [60.0, 100.0]: observed [82.39, 96.08]",
     "lfpr within [50.0, 80.0]: observed [55.69, 66.26]",
     "inflation_yoy within [-5.0, 25.0]: observed [-0.06, 10.28]",
-    "computed inflation vs PSA: max divergence 0.0423 pp at 2020Q3 (tolerance 0.2) over 28 quarters",
+    "computed inflation vs PSA: max divergence 0.0423 pp at 2020Q3 (tolerance 0.1) over 28 quarters",
     "round-month vs 3-month mean over 21 quarters: mean bias +1.1686 pp, round month higher in 17/21 (max 4.4157 pp at 2021Q3) - the two estimators are offset, so they must not be mixed mid-series",
     "GDP year-pair canary: 2026Q1 = 2.8"
   ]

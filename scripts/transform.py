@@ -109,7 +109,12 @@ WINDOW = pd.period_range(WINDOW_START, WINDOW_END, freq="Q")
 # Tolerance for our computed inflation against PSA's published figure. Not zero:
 # we compute year-on-year change on the quarterly MEAN index, while PSA publishes
 # monthly year-on-year rates that we average. Close, but not identical.
-INFLATION_TOLERANCE_PP = 0.20
+#
+# Started at 0.20 as a placeholder before the first run. The observed worst case
+# across the 28-quarter overlap is 0.042 pp, so the bound is now set just above
+# that. A tolerance far looser than the data warrants is a check that cannot
+# fail, which is the same as no check at all.
+INFLATION_TOLERANCE_PP = 0.10
 
 # PSA's published GDP growth for 2026 Q1, a canary that the paired-year columns
 # are read with the correct year. Documented in the data dictionary.
