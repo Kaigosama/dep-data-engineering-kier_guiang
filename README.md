@@ -1,5 +1,18 @@
 # National Underemployment Forecast: Is Philippine Economic Growth Creating Real Jobs?
 
+Forecasting the Philippine national underemployment rate from GDP growth and inflation, using
+PSA OpenSTAT data. Reproducing everything from the committed raw extracts takes three commands
+and no network access:
+
+```bash
+python -m venv venv && venv\Scripts\activate
+pip install -r requirements.txt
+python scripts/run_all.py --check
+```
+
+Full instructions, repository layout and verification steps are in **[How To Run](#how-to-run)**
+at the bottom of this file.
+
 ## Problem Statement
 
 I want to answer: "Can quarter-to-quarter changes in the Philippines' national underemployment rate be anticipated from GDP growth and inflation (CPI)?"
@@ -74,13 +87,8 @@ python scripts/ingest.py --only lfs_underemployment
 python scripts/ingest.py --preview lfs_underemployment   # read a saved pull back as a table
 ```
 
-Setup:
-
-```bash
-python -m venv venv
-venv\Scripts\activate
-pip install -r requirements.txt
-```
+Environment setup is in [How To Run](#how-to-run) — this section documents the ingestion method,
+not the project setup.
 
 ### API base
 
@@ -266,3 +274,116 @@ code produces.
   no-change baseline on a chronological split — never a random shuffle. If GDP and CPI do not beat
   it, that *is* the jobless-growth finding, and the dashboard ships as a growth-employment-gap
   monitor. This is on record before any model is fitted, on purpose.
+
+## How To Run
+
+Requires **Python 3.11 or newer** (built and tested on 3.13). No database server, no API key, no
+paid tooling — `sqlite3` ships with Python.
+
+### Setup
+
+```bash
+python -m venv venv
+```
+
+```bash
+venv\Scripts\activate
+```
+
+On macOS or Linux, activate with `source venv/bin/activate` instead.
+
+```bash
+pip install -r requirements.txt
+```
+
+Two dependencies: `requests` for ingestion, `pandas` for transformation. Everything else is the
+standard library.
+
+### Run the pipeline
+
+```bash
+python scripts/run_all.py --check
+```
+
+That runs every step in order and then verifies the transform is reproducible. `--check` is
+optional; drop it for a plain build.
+
+The raw PSA extracts in `data/raw/` are committed on purpose, so the default run reproduces the
+entire dataset **from those files with no network access**. To re-pull from the PSA OpenSTAT API
+first — which overwrites `data/raw/` with a fresh pull under today's date — add `--with-ingest`.
+
+To see the order without running anything: `python scripts/run_all.py --list`.
+
+### Or run the steps individually
+
+The orchestrator just runs these four in sequence. Each is independently runnable:
+
+| # | Command | Reads | Writes |
+| --- | --- | --- | --- |
+| 1 | `python scripts/ingest.py` | PSA OpenSTAT REST API | `data/raw/` + `_manifest.json` |
+| 2 | `python scripts/transform.py` | `data/raw/` | `data/processed/` (4 CSVs + report) |
+| 3 | `python scripts/load_db.py` | `data/processed/` | `data/processed/underemployment.db` |
+| 4 | `python scripts/run_sql.py` | `sql/business_questions.sql` | `output/sql_results.md` |
+
+Step 1 is optional — see above. Steps 2–4 must run in that order; each consumes what the previous
+one wrote.
+
+Useful flags:
+
+| Command | Does |
+| --- | --- |
+| `python scripts/ingest.py --list` | show the configured source tables, no network |
+| `python scripts/transform.py --profile` | print `head` / `info` / `describe` / `value_counts` |
+| `python scripts/transform.py --check-reproducible` | rebuild elsewhere and compare; writes nothing |
+| `python scripts/load_db.py --check` | report row counts and per-indicator coverage |
+| `python scripts/run_sql.py --print` | also print the query results to the terminal |
+
+### This is ETL, not ELT
+
+The data is transformed **before** it is loaded: `transform.py` reshapes and validates, and only
+the clean result reaches SQLite. Loading the raw extracts and reshaping in SQL (ELT) would be
+harder here — the three raw layouts are one long table, two wide ones, and a set of paired-year
+columns, all of which are easier to reconcile in pandas than in SQL — and validating before
+loading means the database never holds a row that failed a check.
+
+### Repository layout
+
+```text
+data/
+  raw/                  committed PSA extracts + _manifest.json (provenance per pull)
+  processed/            the Milestone 3 deliverable: 4 CSVs + _transform_report.json
+  data_dictionary.md    every field, the ERD, the processed schema, the transformation flow
+  cleaning_log.md       every cleaning decision, its reasoning and its evidence
+scripts/
+  ingest.py             PSA OpenSTAT REST API -> data/raw/
+  transform.py          data/raw/ -> data/processed/   (reshape, derive, validate)
+  load_db.py            data/processed/ -> SQLite, with explicit keys and constraints
+  run_sql.py            runs the business questions -> output/sql_results.md
+  run_all.py            the four steps above, in order
+sql/
+  business_questions.sql  3 business questions + 1 data-quality check
+output/
+  sql_results.md        the answers, committed so they are readable without running anything
+dashboard/              Phase 5
+notebooks/              Phase 4
+```
+
+`data/processed/underemployment.db` is a build artefact and is gitignored — it is rebuilt from the
+CSVs by step 3. The CSVs are the source of truth.
+
+### Verifying a run
+
+```bash
+python scripts/transform.py --check-reproducible
+```
+
+Rebuilds the whole processed layer into a scratch directory and compares checksums against
+`data/processed/`. It writes nothing and exits non-zero on any difference. Expect all four files
+identical; `_transform_report.json` is excluded because it records the run timestamp.
+
+```bash
+git status --short
+```
+
+After a run, `data/processed/*.csv` should be **unchanged**. Only `_transform_report.json` differs,
+by its timestamp. A modified CSV means the code and the committed dataset have drifted apart.
