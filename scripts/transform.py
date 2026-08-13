@@ -1,6 +1,6 @@
 """
-Phase 3 - Data Transformation  (first version, Week 8)
-======================================================
+Phase 3 - Data Transformation  (Week 9: pandas)
+===============================================
 
 Reshapes the six raw PSA OpenSTAT extracts in data/raw/ into the processed layer
 designed in data/data_dictionary.md:
@@ -10,43 +10,63 @@ designed in data/data_dictionary.md:
     fact_indicator_quarter.csv   one row = one indicator's value for one quarter
     analysis_quarterly.csv       one row = one quarter, indicators as columns
 
-WHY THIS VERSION USES ONLY THE STANDARD LIBRARY
------------------------------------------------
-Week 8 is the SQL week and Week 9 is the pandas week. Nothing here needs a
-dataframe: the reshaping is an unpivot and some lagged arithmetic, both of which
-the csv module handles in a few lines. Keeping this version dependency-free means
-the SQL layer can be built and re-run by a reviewer with a bare Python install.
-Week 9 ports this to pandas and adds profiling - that port is the exercise, not
-busywork, and the diff is the record of it.
+This is the pandas version of the Week 8 standard-library script. It produces
+BYTE-IDENTICAL output to it - the four CSVs were already committed, so running
+this and getting a clean `git diff data/processed/*.csv` is what proves the port
+is faithful rather than merely plausible. (An automated re-run check lands in
+Week 11; today the check is the diff.)
+
+WHAT PANDAS ACTUALLY BOUGHT
+---------------------------
+Not brevity for its own sake - four specific things the hand-rolled version had
+to do by hand and could have got wrong:
+
+  * na_values= turns PXWeb's "." and ".." into NaN at read time, so a missing
+    marker can never be mistaken for a number further downstream.
+  * melt() unpivots the wide GDP and CPI tables (100+ period columns, one data
+    row) declaratively instead of scanning column names in a loop.
+  * A PeriodIndex with freq="Q" makes "one quarter earlier" and "four quarters
+    earlier" real operations - .shift(1), .shift(4) - instead of integer
+    arithmetic on a hand-built quarter index.
+  * Automatic index alignment. growth_employment_gap adds two series that do not
+    cover the same quarters; pandas aligns them on the index and yields NaN
+    where either side is absent, which is exactly the wanted behaviour.
+
+THE ONE PANDAS TRAP THIS CODE GUARDS AGAINST
+--------------------------------------------
+.shift() and .diff() are POSITIONAL, not label-aware. On a series whose index is
+missing 2009Q3, .diff(1) at 2009Q4 silently differences against 2009Q2 - a
+six-month change presented as a three-month one, with nothing to show for it.
+So every series is reindexed onto a complete quarterly PeriodIndex BEFORE any
+differencing, and assert_contiguous() enforces that. The Week 8 version was
+immune to this by accident, because it did index arithmetic explicitly.
 
 THE THREE RESHAPING PROBLEMS
 ----------------------------
 1. LFS is LONG   - Year/Month down the rows. Quarterly rounds through 2020,
                    monthly from 2021, plus an "Annual" aggregate row every year.
-2. GDP/CPI are WIDE - one data row with 100+ period columns. They have to be
-                   unpivoted before anything can be joined to them.
+2. GDP/CPI are WIDE - one data row with 100+ period columns.
 3. Nothing shares a key - the extracts only meet once each is reshaped onto a
                    common quarter_id. That is what fact_indicator_quarter is.
 
 THE RULES THIS SCRIPT ENCODES  (reasoning in data/data_dictionary.md)
 ---------------------------------------------------------------------
   * A quarter's LFS value is its ROUND-MONTH value: Jan/Apr/Jul/Oct -> Q1..Q4.
-    One estimator for all 83 quarters. Averaging the three months where they
-    exist from 2021 would change the estimator mid-series and manufacture a 2021
-    level shift that is an artefact of cleaning, not of the labour market.
+    One estimator for all 83 quarters. The round month reads about 1.2 pp above
+    the 3-month mean (measured, 17 of 21 quarters), so averaging the months
+    where they exist from 2021 would step the series down at the join - an
+    artefact of cleaning, not of the labour market.
   * "Annual" (LFS) and "Ave" (CPI) rows are ANNUAL AGGREGATES, not periods.
-    Including them double-counts. They are dropped explicitly, not by accident.
   * GDP growth is YEAR-ON-YEAR and its Year values are PAIRS: "2025-2026 Q1" is
-    Q1 of 2026. The SECOND year is the observation year. An off-by-one here is
-    silent and fatal, so there is a canary assert on a known published figure.
+    Q1 of 2026. The SECOND year is the observation year.
   * Missing values arrive as "." or ".." and mean the survey did not run or the
     figure is unpublished. They are NOT zeros and are never imputed.
-  * The window is 2005Q2-2025Q4: 83 quarters, no gaps. Bounded below by the
-    start of the LFS (April 2005) and above by the end of CPI coverage.
+  * The window is 2005Q2-2025Q4: 83 quarters, no gaps.
 
 Usage
 -----
     python scripts/transform.py
+    python scripts/transform.py --profile     # head/info/describe/value_counts
     python scripts/transform.py --quiet
 """
 
@@ -58,14 +78,15 @@ import hashlib
 import json
 import re
 import sys
-from datetime import date, datetime, timezone
+from datetime import datetime, timezone
 from pathlib import Path
 
-# Reuse the raw-reading helpers rather than reimplementing them. read_pxweb_csv
-# already knows about PXWeb's UTF-8 BOM, and MISSING_MARKERS already lists every
-# missing-value spelling this source uses - including "..", which the GDP levels
-# table uses for unpublished quarters where LFS uses ".".
-from ingest import MISSING_MARKERS, RAW_DATA_DIR, TABLES, is_missing, read_pxweb_csv
+import pandas as pd
+
+# Reuse the ingestion constants rather than restating them. MISSING_MARKERS
+# already lists every missing-value spelling this source uses - including "..",
+# which the GDP levels table uses where LFS uses ".".
+from ingest import MISSING_MARKERS, RAW_DATA_DIR, TABLES
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
@@ -79,58 +100,37 @@ REPORT_PATH = PROCESSED_DIR / "_transform_report.json"
 WINDOW_START = "2005Q2"
 WINDOW_END = "2025Q4"
 
+# Every series is reindexed onto this before differencing, so that .shift() -
+# which counts rows, not quarters - always steps by a real quarter. Wide enough
+# to cover the earliest source (CPI, 1994) and the latest (GDP, 2026).
+FULL_SPAN = pd.period_range("1994Q1", "2026Q4", freq="Q")
+WINDOW = pd.period_range(WINDOW_START, WINDOW_END, freq="Q")
+
 # Tolerance for our computed inflation against PSA's published figure. Not zero:
 # we compute year-on-year change on the quarterly MEAN index, while PSA publishes
-# monthly year-on-year rates that we average. Those are close but not identical.
+# monthly year-on-year rates that we average. Close, but not identical.
 INFLATION_TOLERANCE_PP = 0.20
 
-# PSA's published GDP growth for 2026 Q1, used as a canary that the year-pair
-# columns are being read with the correct year. Documented in the data dictionary.
+# PSA's published GDP growth for 2026 Q1, a canary that the paired-year columns
+# are read with the correct year. Documented in the data dictionary.
 GDP_CANARY_QUARTER = "2026Q1"
 GDP_CANARY_VALUE = 2.8
 
 ROUND_MONTH_TO_QUARTER = {"January": 1, "April": 2, "July": 3, "October": 4}
 QUARTER_TO_ROUND_MONTH = {q: m for m, q in ROUND_MONTH_TO_QUARTER.items()}
+MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July",
+               "August", "September", "October", "November", "December"]
 MONTH_ABBR = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
               "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+# Column patterns for the three wide layouts.
+GDP_GROWTH_COLUMNS = re.compile(r"(\d{4})-(\d{4})\s+Q(\d)\s*$")
+GDP_LEVEL_COLUMNS = re.compile(r"(\d{4})\s+Q(\d)\s*$")
+CPI_COLUMNS = re.compile(r"(\d{4})\s+([A-Za-z]{3})\s*$")
 
 
 class TransformError(Exception):
     """A data problem the user can act on. main() prints it without a traceback."""
-
-
-# --------------------------------------------------------------------------- #
-# Quarter arithmetic
-# --------------------------------------------------------------------------- #
-#
-# Quarters are held as a single integer index so that "one quarter earlier" and
-# "four quarters earlier" are plain subtraction. Doing this with (year, quarter)
-# tuples invites off-by-one errors at every year boundary.
-
-
-def qindex(year: int, quarter: int) -> int:
-    return year * 4 + (quarter - 1)
-
-
-def qid(year: int, quarter: int) -> str:
-    return f"{year}Q{quarter}"
-
-
-def qid_from_index(index: int) -> str:
-    return qid(index // 4, index % 4 + 1)
-
-
-def index_from_qid(quarter_id: str) -> int:
-    year, quarter = quarter_id.split("Q")
-    return qindex(int(year), int(quarter))
-
-
-def quarter_bounds(index: int) -> tuple[date, date]:
-    year, quarter = index // 4, index % 4 + 1
-    start_month = 3 * (quarter - 1) + 1
-    end_month = start_month + 2
-    last_day = 31 if end_month in (3, 12) else 30
-    return date(year, start_month, 1), date(year, end_month, last_day)
 
 
 # --------------------------------------------------------------------------- #
@@ -143,8 +143,7 @@ def resolve_latest_raw_files() -> dict[str, list[Path]]:
 
     Read from _manifest.json rather than globbing for a hardcoded date. Raw
     filenames carry the pull date, so hardcoding one means this script silently
-    keeps reading a stale extract the next time ingest.py runs. The manifest is
-    the record of which pull is current.
+    keeps reading a stale extract the next time ingest.py runs.
     """
     if not MANIFEST_PATH.exists():
         raise TransformError(
@@ -152,18 +151,12 @@ def resolve_latest_raw_files() -> dict[str, list[Path]]:
         )
 
     records = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
-    latest_date: dict[str, str] = {}
-    for record in records:
-        name, pulled = record["name"], record["retrieved_at_utc"]
-        if name not in latest_date or pulled > latest_date[name]:
-            latest_date[name] = pulled
+    latest = pd.DataFrame(records).groupby("name")["retrieved_at_utc"].max()
 
-    # Keep only the records belonging to each dataset's newest pull, in chunk
-    # order so multi-part extracts concatenate as contiguous blocks of periods.
     files: dict[str, list[Path]] = {}
     for record in sorted(records, key=lambda r: r["chunk"]):
         name = record["name"]
-        if record["retrieved_at_utc"] != latest_date[name]:
+        if record["retrieved_at_utc"] != latest[name]:
             continue
         path = RAW_DATA_DIR / record["output_file"]
         if not path.exists():
@@ -182,14 +175,28 @@ def resolve_latest_raw_files() -> dict[str, list[Path]]:
     return files
 
 
-def to_number(cell: str) -> float | None:
-    """Parse a PXWeb cell. Missing markers become None, never 0.0."""
-    if is_missing(cell):
-        return None
-    try:
-        return float(cell.replace(",", ""))
-    except ValueError:
-        return None
+def read_raw(path: Path) -> pd.DataFrame:
+    """Read one raw PXWeb CSV with its missing markers already resolved.
+
+    utf-8-sig strips the BOM PXWeb prepends. na_values + keep_default_na=False
+    means EXACTLY the markers ingest.py documented become NaN and nothing else -
+    a value pandas would otherwise guess at stays a plain string and shows up as
+    a dtype surprise rather than a silent null.
+    """
+    return pd.read_csv(path, encoding="utf-8-sig",
+                       na_values=sorted(MISSING_MARKERS), keep_default_na=False)
+
+
+def assert_contiguous(series: pd.Series, label: str) -> pd.Series:
+    """Reindex onto FULL_SPAN so .shift() steps by quarters, not by rows.
+
+    This is the guard for the trap in the module docstring: shifting a series
+    with a hole in its index differences against the wrong period and looks fine.
+    """
+    reindexed = series.reindex(FULL_SPAN)
+    if not reindexed.index.is_monotonic_increasing:
+        raise TransformError(f"{label}: index is not sorted after reindexing.")
+    return reindexed
 
 
 # --------------------------------------------------------------------------- #
@@ -197,12 +204,11 @@ def to_number(cell: str) -> float | None:
 # --------------------------------------------------------------------------- #
 
 
-def read_lfs(paths: list[Path]) -> dict[str, dict[int, float]]:
+def read_lfs(paths: list[Path]) -> dict[str, pd.Series]:
     """LFS is LONG: Year/Month down the rows, one column per rate.
 
-    Returns {indicator_code: {quarter_index: value}} using ONLY the round months.
-    Rows for the other eight months (which exist from 2021) and for the "Annual"
-    aggregate are dropped here, which is the single place that rule lives.
+    Drops the "Annual" aggregate rows and the eight non-round months, which is
+    the single place the round-month rule lives.
     """
     wanted = {
         "Underemployment Rate Both sexes": "underemployment_rate",
@@ -211,151 +217,118 @@ def read_lfs(paths: list[Path]) -> dict[str, dict[int, float]]:
         "Labor Force Participation Rate Both sexes": "lfpr",
     }
 
-    series: dict[str, dict[int, float]] = {code: {} for code in wanted.values()}
-    seen_annual = 0
-
-    for path in paths:
-        header, rows = read_pxweb_csv(path)
-        missing_cols = [col for col in wanted if col not in header]
-        if missing_cols:
-            raise TransformError(
-                f"{path.name} is missing expected column(s) {missing_cols}.\n"
-                f"    Columns present: {header}"
-            )
-        position = {col: header.index(col) for col in wanted}
-        year_at, month_at = header.index("Year"), header.index("Month")
-
-        for row in rows:
-            month = row[month_at]
-            if month == "Annual":
-                seen_annual += 1        # counted so validation can prove it was dropped
-                continue
-            if month not in ROUND_MONTH_TO_QUARTER:
-                continue                # a non-round month, 2021 onward
-            index = qindex(int(row[year_at]), ROUND_MONTH_TO_QUARTER[month])
-            for column, code in wanted.items():
-                value = to_number(row[position[column]])
-                if value is not None:
-                    series[code][index] = value
-
-    if not seen_annual:
+    frame = pd.concat([read_raw(path) for path in paths], ignore_index=True)
+    absent = [column for column in wanted if column not in frame.columns]
+    if absent:
         raise TransformError(
-            "No 'Annual' rows were found in the LFS extract. Every year carries one, "
-            "so either the extract is malformed or the aggregate-row filter is no "
-            "longer matching - which would mean aggregates are leaking into the data."
+            f"LFS extract is missing expected column(s) {absent}.\n"
+            f"    Columns present: {list(frame.columns)}"
         )
+
+    annual = int((frame["Month"] == "Annual").sum())
+    if not annual:
+        raise TransformError(
+            "No 'Annual' rows found in the LFS extract. Every year carries one, so "
+            "either the extract is malformed or the aggregate-row filter no longer "
+            "matches - which would mean aggregates are leaking into the data."
+        )
+
+    rounds = frame[frame["Month"].isin(ROUND_MONTH_TO_QUARTER)].copy()
+    rounds["quarter"] = rounds["Month"].map(ROUND_MONTH_TO_QUARTER)
+    index = pd.PeriodIndex(
+        rounds["Year"].astype(str) + "Q" + rounds["quarter"].astype(str), freq="Q"
+    )
+
+    series = {}
+    for column, code in wanted.items():
+        values = pd.to_numeric(rounds[column], errors="coerce")
+        values.index = index
+        series[code] = assert_contiguous(values.dropna().sort_index(), code)
     return series
 
 
-def read_wide(path: Path, pattern: re.Pattern[str]) -> list[tuple[re.Match[str], float | None]]:
-    """GDP and CPI are WIDE: one data row, 100+ period columns.
+def melt_periods(path: Path, pattern: re.Pattern[str]) -> pd.DataFrame:
+    """Unpivot a wide extract: 100+ period columns, one data row, into long form.
 
-    Returns the regex match for each period column paired with its value, leaving
-    the caller to decide what the captured groups mean - the tables disagree about
-    that (year pairs vs single years vs year+month).
+    Returns the regex capture groups alongside the value and leaves the caller to
+    say what they mean - the three wide tables disagree about that (year pairs vs
+    single years vs year and month).
     """
-    header, rows = read_pxweb_csv(path)
-    if len(rows) != 1:
-        raise TransformError(
-            f"{path.name}: expected exactly 1 data row in a wide extract, found "
-            f"{len(rows)}. The selection in ingest.py may have widened."
-        )
-
-    row = rows[0]
-    matched = [(m, to_number(row[i]))
-               for i, column in enumerate(header)
-               if (m := pattern.search(column))]
-    if not matched:
+    frame = read_raw(path)
+    period_columns = [column for column in frame.columns if pattern.search(column)]
+    if not period_columns:
         raise TransformError(
             f"{path.name}: no column matched /{pattern.pattern}/. PXWeb may have "
-            f"changed its column labels.\n    First few columns: {header[:4]}"
+            f"changed its column labels.\n    First few columns: "
+            f"{list(frame.columns[:4])}"
         )
-    return matched
+    if len(frame) != 1:
+        raise TransformError(
+            f"{path.name}: expected exactly 1 data row in a wide extract, found "
+            f"{len(frame)}. The selection in ingest.py may have widened."
+        )
+
+    long = frame.melt(value_vars=period_columns, var_name="label", value_name="value")
+    long["value"] = pd.to_numeric(long["value"], errors="coerce")
+    return long.join(long["label"].str.extract(pattern))
 
 
-def read_gdp_growth(path: Path) -> dict[int, float]:
+def read_gdp_growth(path: Path) -> pd.Series:
     """Year-on-year growth. Columns read '... 2025-2026 Q1'.
 
     The SECOND year of the pair is the observation year: that column is Q1 2026
-    compared with Q1 2025. Reading the first year instead shifts the entire
-    predictor a year against the target and nothing about the output looks wrong.
+    against Q1 2025. Reading the first instead shifts the whole predictor a year
+    against the target, and nothing about the output looks wrong.
     """
-    pattern = re.compile(r"(\d{4})-(\d{4})\s+Q(\d)\s*$")
-    series: dict[int, float] = {}
-    for match, value in read_wide(path, pattern):
-        earlier, later, quarter = int(match[1]), int(match[2]), int(match[3])
-        if later != earlier + 1:
-            raise TransformError(
-                f"{path.name}: year pair '{match[1]}-{match[2]}' is not consecutive. "
-                f"The column format has changed and the year-on-year reading is no "
-                f"longer safe."
-            )
-        if value is not None:
-            series[qindex(later, quarter)] = value
-    return series
+    long = melt_periods(path, GDP_GROWTH_COLUMNS)
+    earlier, later = long[0].astype(int), long[1].astype(int)
+    if not (later == earlier + 1).all():
+        raise TransformError(
+            f"{path.name}: a year pair is not consecutive. The column format has "
+            f"changed and the year-on-year reading is no longer safe."
+        )
+    index = pd.PeriodIndex(long[1] + "Q" + long[2], freq="Q")
+    series = pd.Series(long["value"].values, index=index, name="gdp_growth_yoy")
+    return assert_contiguous(series.dropna().sort_index(), "gdp_growth_yoy")
 
 
-def read_gdp_levels(path: Path) -> dict[int, float]:
+def read_gdp_levels(path: Path) -> pd.Series:
     """Levels at constant 2018 prices. Columns read '... 2000 Q1'."""
-    pattern = re.compile(r"(\d{4})\s+Q(\d)\s*$")
-    return {qindex(int(m[1]), int(m[2])): v
-            for m, v in read_wide(path, pattern) if v is not None}
+    long = melt_periods(path, GDP_LEVEL_COLUMNS)
+    index = pd.PeriodIndex(long[0] + "Q" + long[1], freq="Q")
+    series = pd.Series(long["value"].values, index=index, name="gdp_level")
+    return assert_contiguous(series.dropna().sort_index(), "gdp_level")
 
 
-def read_cpi_monthly(paths: list[Path]) -> dict[tuple[int, int], float]:
-    """Stitch the CPI index legs into one monthly series keyed (year, month).
+def read_cpi_quarterly(paths: list[Path]) -> pd.Series:
+    """Stitch the CPI index legs and collapse months to quarters.
 
     Columns read '2018 Jan' ... '2018 Dec' plus '2018 Ave'. "Ave" is the annual
-    average sitting alongside the months - an aggregate, not a period - so it is
-    excluded by the month lookup rather than by a name check.
+    average sitting alongside the months - an aggregate, not a period - and is
+    dropped by the month lookup rather than by a name check.
+
+    A quarter needs all three of its months: one built from two is not comparable
+    with one built from three, so a partial quarter is dropped, not averaged.
     """
-    pattern = re.compile(r"(\d{4})\s+([A-Za-z]{3})\s*$")
-    month_number = {abbr: i + 1 for i, abbr in enumerate(MONTH_ABBR)}
+    parts = [melt_periods(path, CPI_COLUMNS) for path in paths]
+    long = pd.concat(parts, ignore_index=True)
+    long["month"] = long[1].map({abbr: i + 1 for i, abbr in enumerate(MONTH_ABBR)})
+    long = long.dropna(subset=["month", "value"])
 
-    monthly: dict[tuple[int, int], float] = {}
-    for path in paths:
-        for match, value in read_wide(path, pattern):
-            month = month_number.get(match[2])
-            if month is None or value is None:      # "Ave" lands here and is skipped
-                continue
-            key = (int(match[1]), month)
-            if key in monthly:
-                raise TransformError(
-                    f"CPI month {key} appears in more than one extract. The backcast "
-                    f"and current legs are supposed to abut at 2017-12 / 2018-01, not "
-                    f"overlap - stitching them would double-count."
-                )
-            monthly[key] = value
-    return monthly
+    duplicated = long.duplicated(subset=[0, "month"])
+    if duplicated.any():
+        clash = long.loc[duplicated, [0, 1]].head(3).to_dict("records")
+        raise TransformError(
+            f"CPI month(s) {clash} appear in more than one extract. The backcast and "
+            f"current legs abut at 2017-12 / 2018-01; an overlap would double-count."
+        )
 
-
-def quarterly_mean(monthly: dict[tuple[int, int], float]) -> dict[int, float]:
-    """Collapse a monthly series to quarters, requiring all three months.
-
-    A quarter built from one or two months is not comparable with one built from
-    three, so a partial quarter is dropped rather than silently averaged.
-    """
-    buckets: dict[int, list[float]] = {}
-    for (year, month), value in monthly.items():
-        buckets.setdefault(qindex(year, (month - 1) // 3 + 1), []).append(value)
-    return {index: sum(values) / 3 for index, values in buckets.items() if len(values) == 3}
-
-
-# --------------------------------------------------------------------------- #
-# Derived series
-# --------------------------------------------------------------------------- #
-
-
-def diff(series: dict[int, float], lag: int) -> dict[int, float]:
-    """Difference against `lag` quarters earlier. Absent history yields no row."""
-    return {i: v - series[i - lag] for i, v in series.items() if i - lag in series}
-
-
-def pct_change(series: dict[int, float], lag: int) -> dict[int, float]:
-    """Percent change against `lag` quarters earlier."""
-    return {i: (v / series[i - lag] - 1) * 100
-            for i, v in series.items()
-            if i - lag in series and series[i - lag]}
+    quarter = pd.PeriodIndex(
+        long[0] + "Q" + ((long["month"].astype(int) - 1) // 3 + 1).astype(str), freq="Q"
+    )
+    grouped = long.groupby(quarter)["value"]
+    complete = grouped.mean().where(grouped.count() == 3).dropna()
+    return assert_contiguous(complete.sort_index(), "cpi_index")
 
 
 # --------------------------------------------------------------------------- #
@@ -364,7 +337,7 @@ def pct_change(series: dict[int, float], lag: int) -> dict[int, float]:
 
 TABLE_IDS = {spec.name: spec.table_id for spec in TABLES}
 
-INDICATORS: list[dict] = [
+INDICATORS: list[tuple] = [
     # code, label, unit, source dataset, frequency, aggregation, model input?
     ("underemployment_change_qoq", "Underemployment rate, quarter-on-quarter change",
      "pp", "lfs_underemployment", "derived", "computed", False),
@@ -401,26 +374,33 @@ INDICATORS: list[dict] = [
 OBSERVED = {"underemployment_rate", "unemployment_rate", "employment_rate", "lfpr",
             "gdp_growth_yoy", "gdp_level"}
 
+CODES = [spec[0] for spec in INDICATORS]
+LAGGED = ["gdp_growth_yoy", "gdp_growth_yoy_accel", "inflation_yoy",
+          "inflation_yoy_accel"]
+
 
 # --------------------------------------------------------------------------- #
 # Build
 # --------------------------------------------------------------------------- #
 
 
-def build_series(files: dict[str, list[Path]]) -> tuple[dict[str, dict[int, float]], dict]:
-    """Reshape every extract onto quarter indices and derive the rest."""
+def build_frame(files: dict[str, list[Path]]) -> tuple[pd.DataFrame, dict]:
+    """Reshape every extract onto a quarterly index and derive the rest.
+
+    Every series here is on FULL_SPAN, so .shift() and .diff() step by exactly
+    one quarter and pandas aligns the arithmetic on the index for free.
+    """
     lfs = read_lfs(files["lfs_underemployment"])
     gdp_growth = read_gdp_growth(files["qna_gdp_growth"][0])
     gdp_levels = read_gdp_levels(files["qna_gdp_levels"][0])
-    cpi_monthly = read_cpi_monthly(
+    cpi_index = read_cpi_quarterly(
         files["cpi_index_backcast_1994_2017"] + files["cpi_index_2018_2025"]
     )
-    cpi_index = quarterly_mean(cpi_monthly)
 
-    # The year-pair canary. Checked on the full series BEFORE the window clip,
-    # because the canary quarter sits outside the window.
-    canary = gdp_growth.get(index_from_qid(GDP_CANARY_QUARTER))
-    if canary is None or abs(canary - GDP_CANARY_VALUE) > 0.05:
+    # The year-pair canary, checked on the full series BEFORE the window clip -
+    # the canary quarter sits outside the window on purpose.
+    canary = gdp_growth.get(pd.Period(GDP_CANARY_QUARTER, freq="Q"))
+    if pd.isna(canary) or abs(canary - GDP_CANARY_VALUE) > 0.05:
         raise TransformError(
             f"GDP year-pair canary failed: {GDP_CANARY_QUARTER} reads {canary}, "
             f"expected {GDP_CANARY_VALUE} (PSA's published figure).\n"
@@ -428,85 +408,93 @@ def build_series(files: dict[str, list[Path]]) -> tuple[dict[str, dict[int, floa
             f"year, which shifts the predictor against the target invisibly."
         )
 
-    inflation = pct_change(cpi_index, 4)
+    # Explicit ratio rather than .pct_change(), whose fill_method behaviour has
+    # changed across pandas versions. This spelling means the same thing in every
+    # version and matches the formula written in the data dictionary.
+    inflation = (cpi_index / cpi_index.shift(4) - 1) * 100
+    underemployment = lfs["underemployment_rate"]
 
-    series = {
-        "underemployment_rate": lfs["underemployment_rate"],
+    frame = pd.DataFrame({
+        "underemployment_rate": underemployment,
         "unemployment_rate": lfs["unemployment_rate"],
         "employment_rate": lfs["employment_rate"],
         "lfpr": lfs["lfpr"],
-        "underemployment_change_qoq": diff(lfs["underemployment_rate"], 1),
-        "underemployment_change_yoy": diff(lfs["underemployment_rate"], 4),
+        "underemployment_change_qoq": underemployment.diff(1),
+        "underemployment_change_yoy": underemployment.diff(4),
         "gdp_growth_yoy": gdp_growth,
-        "gdp_growth_yoy_accel": diff(gdp_growth, 1),
+        "gdp_growth_yoy_accel": gdp_growth.diff(1),
         "gdp_level": gdp_levels,
-        "gdp_growth_qoq": pct_change(gdp_levels, 1),
+        "gdp_growth_qoq": (gdp_levels / gdp_levels.shift(1) - 1) * 100,
         "cpi_index": cpi_index,
         "inflation_yoy": inflation,
-        "inflation_yoy_accel": diff(inflation, 1),
-    }
+        "inflation_yoy_accel": inflation.diff(1),
+    })
 
     # The headline KPI: growth minus the IMPROVEMENT in job quality, both
     # year-on-year so the two terms share a window.
     #
     # Note the plus sign. An improvement in underemployment is a FALL, so the
     # change term is negative when things get better - which means growth MINUS
-    # the change would grow largest exactly when job quality improved most,
+    # the change would be largest exactly when job quality improved most,
     # ranking the best quarters as the worst. Adding it makes a large gap mean
     # what the name says:
     #     7% growth, underemployment +2 pp  ->  9.0   growth without jobs
     #     7% growth, underemployment -3 pp  ->  4.0   growth reaching workers
-    series["growth_employment_gap"] = {
-        i: v + series["underemployment_change_yoy"][i]
-        for i, v in gdp_growth.items()
-        if i in series["underemployment_change_yoy"]
-    }
+    #
+    # pandas aligns the two series on the index, so quarters present in only one
+    # of them come out NaN rather than silently pairing the wrong periods.
+    frame["growth_employment_gap"] = (
+        frame["gdp_growth_yoy"] + frame["underemployment_change_yoy"]
+    )
 
     diagnostics = check_inflation_against_psa(inflation, files)
     diagnostics.update(check_lfs_estimator(files))
-    return series, diagnostics
+
+    # Returned on FULL_SPAN, NOT clipped to the window. Derive first, clip last:
+    # GDP and CPI both have real 2005Q1 values - the window starts at 2005Q2
+    # because of the LFS, not because of them - so clipping before taking lags
+    # would leave the first modelling quarter with no features and silently throw
+    # away an observation that exists.
+    return frame[CODES], diagnostics
 
 
-def check_inflation_against_psa(inflation: dict[int, float],
+def check_inflation_against_psa(inflation: pd.Series,
                                 files: dict[str, list[Path]]) -> dict:
-    """Compare our computed inflation with PSA's published year-on-year rates.
+    """Compare computed inflation with PSA's published year-on-year rates.
 
     This is the check that the CPI stitch and the quarterly aggregation are both
     right. Nothing else would catch a mis-joined backcast leg - the numbers would
-    simply be wrong and plausible.
+    simply be wrong and entirely plausible.
     """
-    pattern = re.compile(r"(\d{4})\s+([A-Za-z]{3})\s*$")
-    month_number = {abbr: i + 1 for i, abbr in enumerate(MONTH_ABBR)}
+    long = melt_periods(files["cpi_yoy_official_validation"][0], CPI_COLUMNS)
+    long["month"] = long[1].map({abbr: i + 1 for i, abbr in enumerate(MONTH_ABBR)})
+    long = long.dropna(subset=["month", "value"])
 
-    buckets: dict[int, list[float]] = {}
-    for match, value in read_wide(files["cpi_yoy_official_validation"][0], pattern):
-        month = month_number.get(match[2])
-        if month is None or value is None:
-            continue
-        buckets.setdefault(qindex(int(match[1]), (month - 1) // 3 + 1), []).append(value)
-    official = {i: sum(v) / 3 for i, v in buckets.items() if len(v) == 3}
+    quarter = pd.PeriodIndex(
+        long[0] + "Q" + ((long["month"].astype(int) - 1) // 3 + 1).astype(str), freq="Q"
+    )
+    grouped = long.groupby(quarter)["value"]
+    official = grouped.mean().where(grouped.count() == 3).dropna()
 
-    overlap = sorted(set(official) & set(inflation))
-    if not overlap:
+    comparison = pd.DataFrame({"ours": inflation, "psa": official}).dropna()
+    if comparison.empty:
         raise TransformError("No overlap between computed and published inflation.")
 
-    worst_index = max(overlap, key=lambda i: abs(inflation[i] - official[i]))
-    worst = abs(inflation[worst_index] - official[worst_index])
-    if worst > INFLATION_TOLERANCE_PP:
-        detail = "\n".join(
-            f"      {qid_from_index(i)}  ours {inflation[i]:6.2f}  PSA {official[i]:6.2f}"
-            f"  diff {inflation[i] - official[i]:+.2f}"
-            for i in overlap if abs(inflation[i] - official[i]) > INFLATION_TOLERANCE_PP
-        )
+    comparison["diff"] = comparison["ours"] - comparison["psa"]
+    worst = comparison["diff"].abs().idxmax()
+    worst_value = abs(comparison.loc[worst, "diff"])
+
+    if worst_value > INFLATION_TOLERANCE_PP:
+        over = comparison[comparison["diff"].abs() > INFLATION_TOLERANCE_PP]
         raise TransformError(
             f"Computed inflation diverges from PSA's published figure by up to "
-            f"{worst:.2f} pp, over the {INFLATION_TOLERANCE_PP} pp tolerance.\n"
-            f"    Quarters over tolerance:\n{detail}"
+            f"{worst_value:.2f} pp, over the {INFLATION_TOLERANCE_PP} pp tolerance.\n"
+            f"    Quarters over tolerance:\n{over.round(3).to_string()}"
         )
     return {
-        "inflation_vs_psa_quarters_compared": len(overlap),
-        "inflation_vs_psa_max_divergence_pp": round(worst, 4),
-        "inflation_vs_psa_worst_quarter": qid_from_index(worst_index),
+        "inflation_vs_psa_quarters_compared": int(len(comparison)),
+        "inflation_vs_psa_max_divergence_pp": round(float(worst_value), 4),
+        "inflation_vs_psa_worst_quarter": str(worst),
     }
 
 
@@ -514,59 +502,85 @@ def check_lfs_estimator(files: dict[str, list[Path]]) -> dict:
     """Quantify what the round-month rule costs versus averaging all 3 months.
 
     Only possible from 2021, when the LFS went monthly. This is the evidence for
-    the round-month decision rather than an assertion of it - if the divergence
-    were large the decision would deserve revisiting, and this is what would say so.
+    the round-month decision rather than an assertion of it.
     """
-    column = "Underemployment Rate Both sexes"
-    monthly: dict[tuple[int, int], float] = {}
-    for path in files["lfs_underemployment"]:
-        header, rows = read_pxweb_csv(path)
-        at = header.index(column)
-        year_at, month_at = header.index("Year"), header.index("Month")
-        for row in rows:
-            if row[month_at] == "Annual":
-                continue
-            value = to_number(row[at])
-            if value is None:
-                continue
-            month = next((i + 1 for i, name in enumerate(
-                ["January", "February", "March", "April", "May", "June", "July",
-                 "August", "September", "October", "November", "December"])
-                if name == row[month_at]), None)
-            if month:
-                monthly[(int(row[year_at]), month)] = value
+    frame = pd.concat([read_raw(path) for path in files["lfs_underemployment"]],
+                      ignore_index=True)
+    frame = frame[frame["Month"].isin(MONTH_NAMES)].copy()
+    frame["month"] = frame["Month"].map({name: i + 1 for i, name in enumerate(MONTH_NAMES)})
+    frame["value"] = pd.to_numeric(frame["Underemployment Rate Both sexes"],
+                                   errors="coerce")
+    frame = frame.dropna(subset=["value"])
+    frame["quarter"] = pd.PeriodIndex(
+        frame["Year"].astype(str) + "Q" + ((frame["month"] - 1) // 3 + 1).astype(str),
+        freq="Q")
 
-    buckets: dict[int, list[float]] = {}
-    for (year, month), value in monthly.items():
-        buckets.setdefault(qindex(year, (month - 1) // 3 + 1), []).append(value)
-    full = {i: v for i, v in buckets.items() if len(v) == 3}
+    grouped = frame.groupby("quarter")["value"]
+    full = grouped.mean().where(grouped.count() == 3).dropna()
 
-    round_month_number = {1: 1, 2: 4, 3: 7, 4: 10}
-    gaps: list[tuple[int, float]] = []
-    for index, values in full.items():
-        year, quarter = index // 4, index % 4 + 1
-        round_value = monthly.get((year, round_month_number[quarter]))
-        if round_value is not None:
-            gaps.append((index, round_value - sum(values) / 3))
+    is_round = frame["month"].isin([1, 4, 7, 10])
+    round_value = frame[is_round].set_index("quarter")["value"]
 
-    if not gaps:
+    gaps = (round_value.reindex(full.index) - full).dropna()
+    if gaps.empty:
         return {"lfs_estimator_quarters_compared": 0}
 
-    # The MEAN signed gap is the number that matters, not the max. It is
+    # The MEAN SIGNED gap is the number that matters, not the max. It is
     # consistently positive - the round month reads about a point above the
     # quarter's mean - which is exactly why the two estimators must not be mixed:
     # switching to 3-month means from 2021 would step the series down by roughly
     # that amount at the join, and the step would be an artefact of cleaning
     # rather than anything the labour market did.
-    signed = [gap for _, gap in gaps]
-    worst_index, worst = max(gaps, key=lambda pair: abs(pair[1]))
     return {
-        "lfs_estimator_quarters_compared": len(gaps),
-        "lfs_estimator_mean_bias_pp": round(sum(signed) / len(signed), 4),
-        "lfs_estimator_quarters_round_month_higher": sum(1 for g in signed if g > 0),
-        "lfs_estimator_max_divergence_pp": round(abs(worst), 4),
-        "lfs_estimator_worst_quarter": qid_from_index(worst_index),
+        "lfs_estimator_quarters_compared": int(len(gaps)),
+        "lfs_estimator_mean_bias_pp": round(float(gaps.mean()), 4),
+        "lfs_estimator_quarters_round_month_higher": int((gaps > 0).sum()),
+        "lfs_estimator_max_divergence_pp": round(float(gaps.abs().max()), 4),
+        "lfs_estimator_worst_quarter": str(gaps.abs().idxmax()),
     }
+
+
+# --------------------------------------------------------------------------- #
+# Profiling  (Week 9: head / info / describe / value_counts)
+# --------------------------------------------------------------------------- #
+
+
+def profile(files: dict[str, list[Path]], frame: pd.DataFrame) -> None:
+    """Inspect the raw extracts and the assembled table.
+
+    Kept in the script rather than a notebook so profiling is reproducible and
+    reviewable in a diff. The point is not the numbers - it is that the shapes
+    and dtypes are what the data dictionary claims they are.
+    """
+    rule = "=" * 78
+
+    print(f"\n{rule}\nRAW EXTRACTS AS READ\n{rule}")
+    for name in sorted(files):
+        raw = pd.concat([read_raw(path) for path in files[name]], ignore_index=True)
+        print(f"\n--- {name}  {raw.shape[0]} rows x {raw.shape[1]} columns ---")
+        print(raw.iloc[:, :6].head(3).to_string())
+        if "Month" in raw.columns:
+            # The value_counts that matters. Printed in full, and in calendar
+            # order rather than by frequency, so the "Annual" row is visible
+            # sitting alongside the twelve months instead of buried in a tail.
+            # That row is an annual aggregate, not a period, and gets dropped.
+            counts = raw["Month"].value_counts()
+            ordered = counts.reindex([*MONTH_NAMES, "Annual"]).dropna().astype(int)
+            print(f"\nMonth value_counts ({len(counts)} distinct labels; "
+                  f"'Annual' is an aggregate, not a period - dropped):")
+            print(ordered.to_string())
+
+    print(f"\n{rule}\nASSEMBLED analysis_quarterly\n{rule}\n")
+    print(frame.head().to_string())
+    print()
+    frame.info()
+    print("\nDescribe (model inputs and target):")
+    columns = ["underemployment_change_qoq", "gdp_growth_yoy", "gdp_growth_yoy_accel",
+               "inflation_yoy", "inflation_yoy_accel"]
+    print(frame[columns].describe().round(3).to_string())
+    print("\nNulls per column (expected only where differencing runs off the start):")
+    nulls = frame.isna().sum()
+    print(nulls[nulls > 0].to_string() if nulls.any() else "  none")
 
 
 # --------------------------------------------------------------------------- #
@@ -574,8 +588,7 @@ def check_lfs_estimator(files: dict[str, list[Path]]) -> dict:
 # --------------------------------------------------------------------------- #
 
 
-def validate(quarters: list[int], series: dict[str, dict[int, float]],
-             fact: list[dict], diagnostics: dict) -> list[str]:
+def validate(frame: pd.DataFrame, fact: pd.DataFrame, diagnostics: dict) -> list[str]:
     """Checks matched to this project's real risks, run every time.
 
     In the script, not in a notebook cell - a check that is easy to skip is a
@@ -583,27 +596,37 @@ def validate(quarters: list[int], series: dict[str, dict[int, float]],
     """
     checks: list[str] = []
 
-    expected = list(range(index_from_qid(WINDOW_START), index_from_qid(WINDOW_END) + 1))
-    if quarters != expected:
+    if len(frame) != len(WINDOW) or not frame.index.equals(WINDOW):
         raise TransformError(
             f"Quarter grid is not contiguous {WINDOW_START}..{WINDOW_END}: expected "
-            f"{len(expected)} quarters, built {len(quarters)}. A gap would corrupt "
-            f"every lag-derived column at once."
+            f"{len(WINDOW)} quarters, built {len(frame)}. A gap would corrupt every "
+            f"lag-derived column at once."
         )
-    checks.append(f"quarter grid contiguous: {len(quarters)} quarters "
+    checks.append(f"quarter grid contiguous: {len(frame)} quarters "
                   f"{WINDOW_START}..{WINDOW_END}")
 
-    keys = {(row["quarter_id"], row["indicator_code"]) for row in fact}
-    if len(keys) != len(fact):
+    if fact.duplicated(subset=["quarter_id", "indicator_code"]).any():
         raise TransformError("fact_indicator_quarter has duplicate (quarter_id, "
                              "indicator_code) pairs - the primary key is not unique.")
     checks.append(f"fact composite key unique: {len(fact)} rows")
 
-    codes = {spec[0] for spec in INDICATORS}
-    orphans = {row["indicator_code"] for row in fact} - codes
+    orphans = set(fact["indicator_code"]) - set(CODES)
     if orphans:
         raise TransformError(f"fact references unknown indicator(s): {sorted(orphans)}")
-    checks.append(f"fact -> dim_indicator integrity: {len(codes)} indicators")
+    checks.append(f"fact -> dim_indicator integrity: {len(CODES)} indicators")
+
+    if frame.select_dtypes(include="object").columns.any():
+        raise TransformError(
+            f"Non-numeric columns survived into the analysis frame: "
+            f"{list(frame.select_dtypes(include='object').columns)}. A missing marker "
+            f"was probably read as a string instead of NaN."
+        )
+    checks.append("all indicator columns numeric - no missing markers survived")
+
+    infinite = frame.columns[frame.isin([float("inf"), float("-inf")]).any()].tolist()
+    if infinite:
+        raise TransformError(f"Infinite values in {infinite} - a division by zero.")
+    checks.append("no infinities from ratio columns")
 
     # Range checks. Deliberately wide enough to admit 2020Q2: the COVID round's
     # unemployment spike is real data, and a bound quietly tightened until an
@@ -616,23 +639,16 @@ def validate(quarters: list[int], series: dict[str, dict[int, float]],
         "inflation_yoy": (-5.0, 25.0),
     }
     for code, (low, high) in bounds.items():
-        values = [v for i, v in series[code].items() if i in set(quarters)]
-        if not values:
+        column = frame[code].dropna()
+        if column.empty:
             continue
-        if min(values) < low or max(values) > high:
+        if column.min() < low or column.max() > high:
             raise TransformError(
                 f"'{code}' has values outside [{low}, {high}]: observed range "
-                f"[{min(values):.2f}, {max(values):.2f}]."
+                f"[{column.min():.2f}, {column.max():.2f}]."
             )
         checks.append(f"{code} within [{low}, {high}]: observed "
-                      f"[{min(values):.2f}, {max(values):.2f}]")
-
-    for row in fact:
-        if row["value"] is not None and not isinstance(row["value"], float):
-            raise TransformError(f"Non-numeric value survived into fact: {row!r}")
-        if isinstance(row["value"], str) and row["value"].strip() in MISSING_MARKERS:
-            raise TransformError(f"Missing marker survived into fact: {row!r}")
-    checks.append("no missing markers survived into numeric columns")
+                      f"[{column.min():.2f}, {column.max():.2f}]")
 
     checks.append(
         f"computed inflation vs PSA: max divergence "
@@ -660,9 +676,9 @@ def validate(quarters: list[int], series: dict[str, dict[int, float]],
 # --------------------------------------------------------------------------- #
 
 
-def fmt(value: float | None) -> str:
-    """Fixed precision so a rerun is byte-identical. None becomes empty, not 0."""
-    return "" if value is None else f"{round(value, 4):g}"
+def fmt(value) -> str:
+    """Fixed precision so a rerun is byte-identical. NaN becomes empty, not 0."""
+    return "" if pd.isna(value) else f"{round(float(value), 4):g}"
 
 
 def write_csv(path: Path, header: list[str], rows: list[list]) -> str:
@@ -673,45 +689,59 @@ def write_csv(path: Path, header: list[str], rows: list[list]) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def build_fact(frame: pd.DataFrame, files: dict[str, list[Path]]) -> pd.DataFrame:
+    """Unpivot the analysis frame into the long fact, quarter-major.
+
+    Sorting on an ordered Categorical keeps indicators in catalogue order within
+    each quarter, so the file is stable across runs regardless of dict ordering.
+    """
+    fact = (frame.melt(ignore_index=False, var_name="indicator_code",
+                       value_name="value")
+            .reset_index(names="quarter"))
+    fact["indicator_code"] = pd.Categorical(fact["indicator_code"],
+                                            categories=CODES, ordered=True)
+    fact = fact.sort_values(["quarter", "indicator_code"], kind="stable")
+
+    fact["quarter_id"] = fact["quarter"].astype(str)
+    fact["value_status"] = [
+        "missing" if pd.isna(value) else "observed" if code in OBSERVED else "derived"
+        for code, value in zip(fact["indicator_code"], fact["value"])
+    ]
+    # Each indicator traces back to the raw file it came from, so a value in the
+    # fact can be walked back to a pull without consulting the manifest.
+    raw_file_of = {spec[0]: files[spec[3]][0].name for spec in INDICATORS}
+    fact["source_file"] = fact["indicator_code"].map(raw_file_of).astype(str)
+    return fact
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Reshape data/raw into data/processed.")
+    parser.add_argument("--profile", action="store_true",
+                        help="print head/info/describe/value_counts and exit codes 0")
     parser.add_argument("--quiet", action="store_true", help="suppress the check log")
     args = parser.parse_args(argv)
 
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     files = resolve_latest_raw_files()
-    series, diagnostics = build_series(files)
 
-    quarters = list(range(index_from_qid(WINDOW_START), index_from_qid(WINDOW_END) + 1))
-    codes = [spec[0] for spec in INDICATORS]
+    # full_frame spans 1994Q1-2026Q4; frame is the 83-quarter modelling window.
+    # Lags are taken from full_frame so the first window quarter keeps the real
+    # predictor values that exist just before it.
+    full_frame, diagnostics = build_frame(files)
+    frame = full_frame.reindex(WINDOW)
+    fact = build_fact(frame, files)
+    checks = validate(frame, fact, diagnostics)
 
-    # ---- fact: one row per (quarter, indicator), including explicit absences ----
-    # Each indicator traces back to the raw file it came from, so a value in the
-    # fact can be walked back to a specific pull without consulting the manifest.
-    raw_file_of = {spec[0]: files[spec[3]][0].name for spec in INDICATORS}
-    fact = [
-        {
-            "quarter_id": qid_from_index(index),
-            "indicator_code": code,
-            "value": series[code].get(index),
-            "value_status": ("missing" if series[code].get(index) is None
-                             else "observed" if code in OBSERVED else "derived"),
-            "source_file": raw_file_of[code],
-        }
-        for index in quarters
-        for code in codes
-    ]
-
-    checks = validate(quarters, series, fact, diagnostics)
+    if args.profile:
+        profile(files, frame)
 
     # ---- dim_quarter ----
-    dim_quarter_rows = []
-    for index in quarters:
-        start, end = quarter_bounds(index)
-        quarter = index % 4 + 1
-        dim_quarter_rows.append([qid_from_index(index), index // 4, quarter,
-                                 start.isoformat(), end.isoformat(),
-                                 QUARTER_TO_ROUND_MONTH[quarter]])
+    dim_quarter_rows = [
+        [str(period), period.year, period.quarter,
+         period.start_time.date().isoformat(), period.end_time.date().isoformat(),
+         QUARTER_TO_ROUND_MONTH[period.quarter]]
+        for period in frame.index
+    ]
 
     # ---- dim_indicator ----
     dim_indicator_rows = [
@@ -722,20 +752,19 @@ def main(argv: list[str] | None = None) -> int:
     ]
 
     # ---- analysis_quarterly: the fact pivoted, plus lags ----
-    lagged = ["gdp_growth_yoy", "gdp_growth_yoy_accel", "inflation_yoy",
-              "inflation_yoy_accel"]
-    analysis_header = (
-        ["quarter_id", "year", "quarter_num", "quarter_start_date"]
-        + codes + [f"{code}_lag1" for code in lagged] + ["naive_forecast_change_pp"]
-    )
-    analysis_rows = []
-    for index in quarters:
-        start, _ = quarter_bounds(index)
-        row = [qid_from_index(index), index // 4, index % 4 + 1, start.isoformat()]
-        row += [fmt(series[code].get(index)) for code in codes]
-        row += [fmt(series[code].get(index - 1)) for code in lagged]
-        row.append("0")            # the no-change baseline the model must beat
-        analysis_rows.append(row)
+    analysis = frame.copy()
+    for code in LAGGED:
+        analysis[f"{code}_lag1"] = full_frame[code].shift(1).reindex(WINDOW)
+    analysis["naive_forecast_change_pp"] = 0      # the baseline the model must beat
+
+    analysis_header = (["quarter_id", "year", "quarter_num", "quarter_start_date"]
+                       + list(analysis.columns))
+    analysis_rows = [
+        [str(period), period.year, period.quarter,
+         period.start_time.date().isoformat()]
+        + [fmt(value) for value in row]
+        for period, row in zip(analysis.index, analysis.itertuples(index=False))
+    ]
 
     outputs = {
         "dim_quarter.csv": write_csv(
@@ -752,8 +781,8 @@ def main(argv: list[str] | None = None) -> int:
         "fact_indicator_quarter.csv": write_csv(
             PROCESSED_DIR / "fact_indicator_quarter.csv",
             ["quarter_id", "indicator_code", "value", "value_status", "source_file"],
-            [[r["quarter_id"], r["indicator_code"], fmt(r["value"]),
-              r["value_status"], r["source_file"]] for r in fact]),
+            [[row.quarter_id, str(row.indicator_code), fmt(row.value),
+              row.value_status, row.source_file] for row in fact.itertuples()]),
         "analysis_quarterly.csv": write_csv(
             PROCESSED_DIR / "analysis_quarterly.csv", analysis_header, analysis_rows),
     }
@@ -762,17 +791,16 @@ def main(argv: list[str] | None = None) -> int:
     # byte-identical across reruns and a rerun shows up as a clean git diff.
     REPORT_PATH.write_text(json.dumps({
         "generated_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "window": {"start": WINDOW_START, "end": WINDOW_END, "quarters": len(quarters)},
+        "pandas_version": pd.__version__,
+        "window": {"start": WINDOW_START, "end": WINDOW_END, "quarters": len(frame)},
         "raw_inputs": {name: [p.name for p in paths] for name, paths in sorted(files.items())},
         "outputs": [{"file": name, "sha256": digest} for name, digest in outputs.items()],
         "row_counts": {"dim_quarter": len(dim_quarter_rows),
                        "dim_indicator": len(dim_indicator_rows),
                        "fact_indicator_quarter": len(fact),
                        "analysis_quarterly": len(analysis_rows)},
-        "missing_by_indicator": {
-            code: sum(1 for r in fact
-                      if r["indicator_code"] == code and r["value"] is None)
-            for code in sorted(codes)},
+        "missing_by_indicator": {code: int(frame[code].isna().sum())
+                                 for code in sorted(CODES)},
         "diagnostics": diagnostics,
         "checks_passed": checks,
     }, indent=2), encoding="utf-8")
@@ -784,8 +812,8 @@ def main(argv: list[str] | None = None) -> int:
         print()
         for name, digest in outputs.items():
             print(f"  {name:<30} {digest[:12]}")
-    print(f"\n{len(quarters)} quarters x {len(codes)} indicators -> "
-          f"{len(fact)} fact rows. Report: {REPORT_PATH.name}")
+    print(f"\n{len(frame)} quarters x {len(CODES)} indicators -> {len(fact)} fact rows. "
+          f"Report: {REPORT_PATH.name}")
     return 0
 
 
