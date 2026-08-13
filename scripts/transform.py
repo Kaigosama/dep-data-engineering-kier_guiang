@@ -125,6 +125,25 @@ INFLATION_TOLERANCE_PP = 0.10
 GDP_CANARY_QUARTER = "2026Q1"
 GDP_CANARY_VALUE = 2.8
 
+# The four CSVs that constitute the processed dataset. The report is NOT here:
+# it carries a run timestamp on purpose, so it is excluded from the
+# reproducibility comparison rather than making it impossible.
+OUTPUT_FILES = ("dim_quarter.csv", "dim_indicator.csv",
+                "fact_indicator_quarter.csv", "analysis_quarterly.csv")
+
+# Columns that are null at the START of the window as an arithmetic consequence
+# of differencing, and how many leading quarters that costs. Every other column
+# must be complete. This is the check that would catch a survey round going
+# missing mid-series - without it, a hole anywhere would just look like more of
+# the same expected nulls.
+EXPECTED_LEADING_NULLS = {
+    "underemployment_change_qoq": 1,    # needs t-1
+    "underemployment_change_yoy": 4,    # needs t-4
+    "growth_employment_gap": 4,         # inherits the t-4 requirement
+}
+
+VALID_VALUE_STATUS = {"observed", "derived", "missing"}
+
 ROUND_MONTH_TO_QUARTER = {"January": 1, "April": 2, "July": 3, "October": 4}
 QUARTER_TO_ROUND_MONTH = {q: m for m, q in ROUND_MONTH_TO_QUARTER.items()}
 MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July",
@@ -637,6 +656,46 @@ def validate(frame: pd.DataFrame, fact: pd.DataFrame, diagnostics: dict) -> list
     if orphans:
         raise TransformError(f"fact references unknown indicator(s): {sorted(orphans)}")
     checks.append(f"fact -> dim_indicator integrity: {len(CODES)} indicators")
+
+    # A duplicated code in the catalogue would collapse two indicators into one
+    # column at pivot time and lose a series without any error.
+    if len(set(CODES)) != len(CODES):
+        repeated = sorted({code for code in CODES if CODES.count(code) > 1})
+        raise TransformError(f"Duplicate indicator_code in the catalogue: {repeated}")
+
+    unknown_status = set(fact["value_status"]) - VALID_VALUE_STATUS
+    if unknown_status:
+        raise TransformError(
+            f"Invalid value_status categor(ies): {sorted(unknown_status)}. "
+            f"Allowed: {sorted(VALID_VALUE_STATUS)}."
+        )
+    checks.append(f"value_status within {sorted(VALID_VALUE_STATUS)}")
+
+    # ---- the null pattern ----
+    # Nulls are allowed ONLY where differencing runs off the start of the window,
+    # and only there. A missing survey round in, say, 2014 would otherwise be
+    # indistinguishable from these expected gaps.
+    for code in CODES:
+        nulls = frame[code].isna()
+        expected = EXPECTED_LEADING_NULLS.get(code, 0)
+        if int(nulls.sum()) != expected:
+            where = [str(q) for q in frame.index[nulls]]
+            raise TransformError(
+                f"'{code}' has {int(nulls.sum())} null(s), expected {expected}.\n"
+                f"    Null at: {where[:12]}{' ...' if len(where) > 12 else ''}\n"
+                f"    Nulls outside the window start mean a period is genuinely "
+                f"absent from a source, not that differencing ran out of history."
+            )
+        if expected and not nulls.iloc[:expected].all():
+            raise TransformError(
+                f"'{code}' has {expected} null(s) but they are not the first "
+                f"{expected} quarters of the window - a gap has moved."
+            )
+    checks.append(
+        f"null pattern exact: only {sorted(EXPECTED_LEADING_NULLS)} are null, "
+        f"only at the window start; the other "
+        f"{len(CODES) - len(EXPECTED_LEADING_NULLS)} indicators are complete"
+    )
 
     if frame.select_dtypes(include="object").columns.any():
         raise TransformError(
