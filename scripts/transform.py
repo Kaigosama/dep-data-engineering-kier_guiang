@@ -238,6 +238,20 @@ def read_lfs(paths: list[Path]) -> dict[str, pd.Series]:
             "matches - which would mean aggregates are leaking into the data."
         )
 
+    # The LFS arrives as two files because the query exceeded the API's cell cap
+    # and was split along the time axis. The split is supposed to produce
+    # disjoint blocks of periods; if the chunk boundaries ever overlapped, the
+    # concat above would duplicate whole rows and every downstream aggregate
+    # would be quietly wrong. Cheap to check, expensive to miss.
+    duplicated = frame.duplicated(subset=["Year", "Month"])
+    if duplicated.any():
+        clash = frame.loc[duplicated, ["Year", "Month"]].head(5).to_dict("records")
+        raise TransformError(
+            f"Duplicate (Year, Month) rows after concatenating the LFS parts: "
+            f"{clash}.\n    The ingest chunks are meant to be disjoint - check "
+            f"chunk_by_time() in scripts/ingest.py."
+        )
+
     rounds = frame[frame["Month"].isin(ROUND_MONTH_TO_QUARTER)].copy()
     rounds["quarter"] = rounds["Month"].map(ROUND_MONTH_TO_QUARTER)
     index = pd.PeriodIndex(
