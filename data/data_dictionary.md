@@ -405,7 +405,7 @@ into.
 | `cpi_index_2018base`, `gdp_level_mn_php_const2018` | source levels | float |
 | `gdp_growth_qoq_pct` | **diagnostic only, not seasonally adjusted** | float |
 | `underemployment_change_yoy_pp` | `rate(t) − rate(t−4)` | float |
-| `growth_employment_gap` | `gdp_growth_yoy_pct − underemployment_change_yoy_pp` | float |
+| `growth_employment_gap` | `gdp_growth_yoy_pct + underemployment_change_yoy_pp` — growth minus the *improvement* in job quality. The plus sign is deliberate: an improvement is a fall, so subtracting the change would score the best quarters highest. Large = the economy grew and job quality did not follow. | float |
 
 **Two different quantities, deliberately both present.** The *model target* is the QoQ change. The
 *headline dashboard KPI* `growth_employment_gap` is computed year-on-year on both sides, so the

@@ -12,7 +12,7 @@ This project is for labor policy researchers, national government agencies such 
 
 ## KPI or Key Metric
 
-The main metric I want to track is **national underemployment rate (%)**, including its **one-quarter-ahead forecast**, alongside a derived **"growth-employment gap" indicator**, calculated as the GDP growth rate minus the change in the underemployment rate, to identify periods when economic growth does not correspond with improvements in job quality.
+The main metric I want to track is **national underemployment rate (%)**, including its **one-quarter-ahead forecast**, alongside a derived **"growth-employment gap" indicator**, calculated as the GDP growth rate minus the year-on-year *improvement* in the underemployment rate, to identify periods when economic growth does not correspond with improvements in job quality. Because an improvement is a *fall* in the rate, in the data this is `gdp_growth_yoy + underemployment_change_yoy` — so a large gap marks a quarter where the economy grew and job quality did not follow.
 
 ## Possible Final Dashboard
 
@@ -218,7 +218,7 @@ Summary:
 | `inflation_yoy_pct` | computed from the stitched 1994–2025 CPI index — **predictor** | float |
 | `inflation_yoy_accel_pp` | `yoy(t) − yoy(t−1)` — **predictor** | float |
 | `naive_forecast_change_pp` | ≡ 0, the no-change baseline the model must beat | float |
-| `growth_employment_gap` | `gdp_growth_yoy_pct − underemployment_change_yoy_pp` — the dashboard KPI | float |
+| `growth_employment_gap` | `gdp_growth_yoy_pct + underemployment_change_yoy_pp` — the dashboard KPI; large = growth without job-quality gains | float |
 
 ### Related tables
 
