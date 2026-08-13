@@ -31,6 +31,10 @@ to do by hand and could have got wrong:
   * Automatic index alignment. growth_employment_gap adds two series that do not
     cover the same quarters; pandas aligns them on the index and yields NaN
     where either side is absent, which is exactly the wanted behaviour.
+  * merge(validate="one_to_one"), which turns "quarter_id is unique on both
+    sides" from an assumption into something that raises when it stops holding.
+    Joining on a weak key is the classic quiet way to corrupt a dataset: a
+    duplicated key multiplies rows, and the result still looks like a table.
 
 THE ONE PANDAS TRAP THIS CODE GUARDS AGAINST
 --------------------------------------------
@@ -733,6 +737,75 @@ def build_fact(frame: pd.DataFrame, files: dict[str, list[Path]]) -> pd.DataFram
     return fact
 
 
+def build_dim_quarter(index: pd.PeriodIndex) -> pd.DataFrame:
+    """The calendar dimension, derived from the PeriodIndex itself.
+
+    start_time / end_time come from the period rather than being computed, so
+    quarter boundaries cannot drift from the index the facts are keyed on.
+    """
+    return pd.DataFrame({
+        "quarter_id": index.astype(str),
+        "year": index.year,
+        "quarter_num": index.quarter,
+        "quarter_start_date": index.start_time,          # real datetime64...
+        "quarter_end_date": index.end_time,              # ...formatted at write
+        "lfs_round_month": [QUARTER_TO_ROUND_MONTH[q] for q in index.quarter],
+    })
+
+
+def build_analysis(fact: pd.DataFrame, dim_quarter: pd.DataFrame,
+                   full_frame: pd.DataFrame) -> pd.DataFrame:
+    """Pivot the fact back to one row per quarter and join the calendar onto it.
+
+    WHY BUILD IT FROM THE FACT RATHER THAN FROM THE SOURCE FRAME
+    ------------------------------------------------------------
+    The data dictionary says analysis_quarterly is "a pivot of the fact, not a
+    second source of truth". Until now it was assembled independently, so the two
+    could in principle disagree and nothing would notice. Deriving it from the
+    fact makes that claim true by construction: any value here came through the
+    fact, and the calendar columns come from dim_quarter rather than being
+    recomputed, so the three files cannot drift apart.
+
+    WHY validate="one_to_one"
+    -------------------------
+    "Joining on a weak key" is the classic way to corrupt a dataset quietly - a
+    key duplicated on one side silently multiplies rows, and the result still
+    looks like a table. quarter_id is unique in both frames by design, so saying
+    so lets pandas raise if that ever stops being true. how="left" keeps the
+    calendar's ordering rather than relying on merge's ordering guarantees.
+    """
+    wide = (fact
+            .assign(indicator_code=fact["indicator_code"].astype(str))
+            .pivot(index="quarter_id", columns="indicator_code", values="value")
+            .reindex(columns=CODES)
+            .reset_index())
+    wide.columns.name = None
+
+    # Lags come from the FULL span, not the window: GDP and CPI have real values
+    # in the quarter before the window opens, and clipping first would discard
+    # them. See build_frame().
+    lags = pd.DataFrame({f"{code}_lag1": full_frame[code].shift(1).reindex(WINDOW)
+                         for code in LAGGED})
+    lags.index = lags.index.astype(str)
+    lags = lags.reset_index(names="quarter_id")
+
+    calendar = dim_quarter[["quarter_id", "year", "quarter_num", "quarter_start_date"]]
+    analysis = (calendar
+                .merge(wide, on="quarter_id", how="left", validate="one_to_one")
+                .merge(lags, on="quarter_id", how="left", validate="one_to_one"))
+
+    if len(analysis) != len(dim_quarter):
+        raise TransformError(
+            f"The join changed the row count: {len(dim_quarter)} quarters in, "
+            f"{len(analysis)} out. quarter_id is no longer a clean key."
+        )
+    if analysis[["year", "quarter_num"]].isna().any().any():
+        raise TransformError("A quarter lost its calendar columns in the join.")
+
+    analysis["naive_forecast_change_pp"] = 0   # the baseline the model must beat
+    return analysis
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Reshape data/raw into data/processed.")
     parser.add_argument("--profile", action="store_true",
@@ -755,12 +828,16 @@ def main(argv: list[str] | None = None) -> int:
         profile(files, frame)
 
     # ---- dim_quarter ----
-    dim_quarter_rows = [
-        [str(period), period.year, period.quarter,
-         period.start_time.date().isoformat(), period.end_time.date().isoformat(),
-         QUARTER_TO_ROUND_MONTH[period.quarter]]
-        for period in frame.index
-    ]
+    # Dates are held as datetime64 through the pipeline and rendered to ISO only
+    # here, at the boundary. Formatting on write rather than on build is what
+    # keeps a rerun byte-identical regardless of pandas' repr conventions.
+    dim_quarter = build_dim_quarter(frame.index)
+    dim_quarter_out = dim_quarter.copy()
+    for column in ("quarter_start_date", "quarter_end_date"):
+        dim_quarter_out[column] = dim_quarter_out[column].dt.strftime("%Y-%m-%d")
+    for column in ("year", "quarter_num"):
+        dim_quarter_out[column] = dim_quarter_out[column].astype(int).astype(str)
+    dim_quarter_rows = dim_quarter_out.values.tolist()
 
     # ---- dim_indicator ----
     dim_indicator_rows = [
@@ -770,20 +847,17 @@ def main(argv: list[str] | None = None) -> int:
         in sorted(INDICATORS)
     ]
 
-    # ---- analysis_quarterly: the fact pivoted, plus lags ----
-    analysis = frame.copy()
-    for code in LAGGED:
-        analysis[f"{code}_lag1"] = full_frame[code].shift(1).reindex(WINDOW)
-    analysis["naive_forecast_change_pp"] = 0      # the baseline the model must beat
-
-    analysis_header = (["quarter_id", "year", "quarter_num", "quarter_start_date"]
-                       + list(analysis.columns))
-    analysis_rows = [
-        [str(period), period.year, period.quarter,
-         period.start_time.date().isoformat()]
-        + [fmt(value) for value in row]
-        for period, row in zip(analysis.index, analysis.itertuples(index=False))
-    ]
+    # ---- analysis_quarterly: the fact pivoted, joined to the calendar ----
+    analysis = build_analysis(fact, dim_quarter, full_frame)
+    analysis_header = list(analysis.columns)
+    analysis_out = analysis.copy()
+    analysis_out["quarter_start_date"] = (
+        analysis_out["quarter_start_date"].dt.strftime("%Y-%m-%d"))
+    for column in ("year", "quarter_num"):
+        analysis_out[column] = analysis_out[column].astype(int).astype(str)
+    for column in analysis_header[4:]:
+        analysis_out[column] = analysis_out[column].map(fmt)
+    analysis_rows = analysis_out.values.tolist()
 
     outputs = {
         "dim_quarter.csv": write_csv(
