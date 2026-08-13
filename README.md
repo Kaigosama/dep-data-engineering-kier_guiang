@@ -234,6 +234,26 @@ small star schema rather than joined directly:
 `scripts/load_db.py` will load all four into `data/processed/underemployment.db` (SQLite) with
 explicit `PRIMARY KEY` / `FOREIGN KEY` DDL, so the keys are enforced rather than just documented.
 
+### Data quality and reproducibility
+
+Every cleaning decision, its reasoning and the evidence behind it are logged in
+**[`data/cleaning_log.md`](data/cleaning_log.md)** — including the ones that could reasonably
+have gone the other way, and the condition that would overturn each.
+
+Validation runs inside `transform.py` on every execution, not in notebook cells that are easy to
+skip. Any failure aborts before anything is written. The checks have been negative-tested: a
+mid-series null, a moved null, an invalid category, a duplicated fact row, a duplicated join key
+and an injected drift were each introduced deliberately to confirm the corresponding check fails.
+
+```bash
+python scripts/transform.py --check-reproducible
+```
+
+Rebuilds the whole processed layer into a scratch directory and compares checksums against
+`data/processed/`. Writes nothing; exits non-zero on any difference. It catches both
+non-determinism in the transform and drift between the committed dataset and what the current
+code produces.
+
 ### Two decisions worth flagging
 
 - **The target is quarter-to-quarter; the predictors are year-on-year.** Measured on the raw data,
