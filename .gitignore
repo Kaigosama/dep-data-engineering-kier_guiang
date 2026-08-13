@@ -11,6 +11,16 @@ __pycache__/
 Thumbs.db
 .DS_Store
 
+# Build artefacts
+# The SQLite database is rebuilt from data/processed/*.csv in one command
+# (python scripts/load_db.py), so the CSVs are the source of truth and the .db
+# is not tracked. Committing it would mean two copies of the same data that can
+# silently disagree.
+data/processed/*.db
+
 # NOTE: data/raw/ is deliberately NOT ignored.
 # The Milestone 2 deliverable requires sample raw pulls to be committed,
 # so the raw extracts in data/raw/ are tracked on purpose.
+#
+# NOTE: data/processed/*.csv is also deliberately NOT ignored.
+# The Milestone 3 deliverable is the processed dataset itself.
