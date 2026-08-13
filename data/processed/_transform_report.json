@@ -1,0 +1,93 @@
+{
+  "generated_at_utc": "2026-08-13T14:40:01+00:00",
+  "window": {
+    "start": "2005Q2",
+    "end": "2025Q4",
+    "quarters": 83
+  },
+  "raw_inputs": {
+    "cpi_index_2018_2025": [
+      "psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv"
+    ],
+    "cpi_index_backcast_1994_2017": [
+      "psa_openstat_cpi_index_backcast_1994_2017_0012M4ACP15_2026-08-02.csv"
+    ],
+    "cpi_yoy_official_validation": [
+      "psa_openstat_cpi_yoy_official_validation_0012M4ACP10_2026-08-02.csv"
+    ],
+    "lfs_underemployment": [
+      "psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv",
+      "psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part2.csv"
+    ],
+    "qna_gdp_growth": [
+      "psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv"
+    ],
+    "qna_gdp_levels": [
+      "psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv"
+    ]
+  },
+  "outputs": [
+    {
+      "file": "dim_quarter.csv",
+      "sha256": "a2cfd4f22f655bf59a210820a040970472e64a12ecf638d0b142430265b8570e"
+    },
+    {
+      "file": "dim_indicator.csv",
+      "sha256": "056532e769bf040ba3756195ada84de88e905d64edb1da7895a22243dc9fd7b6"
+    },
+    {
+      "file": "fact_indicator_quarter.csv",
+      "sha256": "b98106af57c287248692a03398bd8178ce143151b693fcd6ecaf5dec6666f216"
+    },
+    {
+      "file": "analysis_quarterly.csv",
+      "sha256": "9ed90d50fad4c665ca69f6a5174d904a8d18e505af230abe843f42dfb5fc1632"
+    }
+  ],
+  "row_counts": {
+    "dim_quarter": 83,
+    "dim_indicator": 14,
+    "fact_indicator_quarter": 1162,
+    "analysis_quarterly": 83
+  },
+  "missing_by_indicator": {
+    "cpi_index": 0,
+    "employment_rate": 0,
+    "gdp_growth_qoq": 0,
+    "gdp_growth_yoy": 0,
+    "gdp_growth_yoy_accel": 0,
+    "gdp_level": 0,
+    "growth_employment_gap": 4,
+    "inflation_yoy": 0,
+    "inflation_yoy_accel": 0,
+    "lfpr": 0,
+    "underemployment_change_qoq": 1,
+    "underemployment_change_yoy": 4,
+    "underemployment_rate": 0,
+    "unemployment_rate": 0
+  },
+  "diagnostics": {
+    "inflation_vs_psa_quarters_compared": 28,
+    "inflation_vs_psa_max_divergence_pp": 0.0423,
+    "inflation_vs_psa_worst_quarter": "2020Q3",
+    "lfs_estimator_quarters_compared": 21,
+    "lfs_estimator_mean_bias_pp": 1.1686,
+    "lfs_estimator_quarters_round_month_higher": 17,
+    "lfs_estimator_max_divergence_pp": 4.4157,
+    "lfs_estimator_worst_quarter": "2021Q3"
+  },
+  "checks_passed": [
+    "quarter grid contiguous: 83 quarters 2005Q2..2025Q4",
+    "fact composite key unique: 1162 rows",
+    "fact -> dim_indicator integrity: 14 indicators",
+    "underemployment_rate within [5.0, 40.0]: observed [11.71, 26.14]",
+    "unemployment_rate within [0.0, 25.0]: observed [3.92, 17.61]",
+    "employment_rate within [60.0, 100.0]: observed [82.39, 96.08]",
+    "lfpr within [50.0, 80.0]: observed [55.69, 66.26]",
+    "inflation_yoy within [-5.0, 25.0]: observed [-0.06, 10.28]",
+    "no missing markers survived into numeric columns",
+    "computed inflation vs PSA: max divergence 0.0423 pp at 2020Q3 (tolerance 0.2) over 28 quarters",
+    "round-month vs 3-month mean over 21 quarters: mean bias +1.1686 pp, round month higher in 17/21 (max 4.4157 pp at 2021Q3) - the two estimators are offset, so they must not be mixed mid-series",
+    "GDP year-pair canary: 2026Q1 = 2.8"
+  ]
+}

@@ -1,0 +1,15 @@
+indicator_code,indicator_label,unit,source_dataset,source_table_id,native_frequency,aggregation_method,is_model_input
+cpi_index,Consumer price index,index_2018=100,cpi_index_2018_2025,0012M4ACP09.px,monthly,quarter_mean,false
+employment_rate,Employment rate,percent,lfs_underemployment,0021B3FKEI2.px,quarterly,round_month,false
+gdp_growth_qoq,"GDP growth, quarter-on-quarter (NOT seasonally adjusted)",percent,qna_gdp_levels,0052B5BPRQ1.px,derived,computed,false
+gdp_growth_yoy,"GDP growth, year-on-year",percent,qna_gdp_growth,0062B5BPRQ2.px,quarterly,as_published,true
+gdp_growth_yoy_accel,"GDP growth acceleration, quarter-on-quarter",pp,qna_gdp_growth,0062B5BPRQ2.px,derived,computed,true
+gdp_level,GDP at constant 2018 prices,million_php_const2018,qna_gdp_levels,0052B5BPRQ1.px,quarterly,as_published,false
+growth_employment_gap,Growth-employment gap,pp,qna_gdp_growth,0062B5BPRQ2.px,derived,computed,false
+inflation_yoy,"Inflation, year-on-year",percent,cpi_index_2018_2025,0012M4ACP09.px,derived,computed,true
+inflation_yoy_accel,"Inflation acceleration, quarter-on-quarter",pp,cpi_index_2018_2025,0012M4ACP09.px,derived,computed,true
+lfpr,Labor force participation rate,percent,lfs_underemployment,0021B3FKEI2.px,quarterly,round_month,false
+underemployment_change_qoq,"Underemployment rate, quarter-on-quarter change",pp,lfs_underemployment,0021B3FKEI2.px,derived,computed,false
+underemployment_change_yoy,"Underemployment rate, year-on-year change",pp,lfs_underemployment,0021B3FKEI2.px,derived,computed,false
+underemployment_rate,Underemployment rate,percent,lfs_underemployment,0021B3FKEI2.px,quarterly,round_month,false
+unemployment_rate,Unemployment rate,percent,lfs_underemployment,0021B3FKEI2.px,quarterly,round_month,false
