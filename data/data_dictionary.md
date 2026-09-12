@@ -1,7 +1,8 @@
 # Data Dictionary — National Underemployment Forecast
 
-Documents every file landed in `data/raw/` by `scripts/ingest.py`, plus the entity model showing how
-those extracts relate and how they will be combined in Phase 3.
+Documents every file landed in `data/raw/` by `scripts/ingest.py`, the four processed files
+`scripts/transform.py` builds from them in `data/processed/`, and the entity model showing how the
+extracts relate and where they are combined.
 
 - **Source:** PSA OpenSTAT, PX-Web REST API — `https://openstat.psa.gov.ph/PXWeb/api/v1/en/DB`
 - **Ingestion path:** API (Path A)
@@ -78,6 +79,7 @@ erDiagram
         int year
         int quarter_num
         date quarter_start_date
+        date quarter_end_date
         string lfs_round_month
     }
     DIM_INDICATOR {
@@ -85,7 +87,9 @@ erDiagram
         string indicator_label
         string unit
         string source_dataset
+        string source_table_id
         string native_frequency
+        string aggregation_method
         bool is_model_input
     }
     FACT_INDICATOR_QUARTER {
@@ -96,13 +100,13 @@ erDiagram
         string source_file
     }
     ANALYSIS_QUARTERLY {
-        string quarter_id PK
-        float underemployment_rate_pct
-        float underemployment_change_qoq_pp
-        float gdp_growth_yoy_pct
-        float gdp_growth_yoy_accel_pp
-        float inflation_yoy_pct
-        float inflation_yoy_accel_pp
+        string quarter_id PK,FK
+        float underemployment_rate
+        float underemployment_change_qoq
+        float gdp_growth_yoy
+        float gdp_growth_yoy_accel
+        float inflation_yoy
+        float inflation_yoy_accel
         float growth_employment_gap
     }
 
@@ -125,11 +129,13 @@ erDiagram
     FACT_INDICATOR_QUARTER }|--|| ANALYSIS_QUARTERLY : "14 fact rows pivot to 1 analysis row"
 ```
 
-The four tables on the right are the **planned** Phase 3 output — none of them exist yet. They are
-shown because the processed layer is the only place the six extracts actually join: they share no key
-in their raw form, and each must be reshaped onto a common quarter before they can be combined.
+The four tables on the right are the processed layer in `data/processed/`, built by
+`scripts/transform.py` and documented in full under [Processed layer schema](#processed-layer-schema).
+They are the only place the six extracts actually join: the extracts share no key in their raw form,
+and each must be reshaped onto a common quarter before they can be combined.
 `FACT_INDICATOR_QUARTER` is where that join happens; `ANALYSIS_QUARTERLY` is a pivot of it, not a
-second source of truth.
+second source of truth. `ANALYSIS_QUARTERLY` is abbreviated in the diagram — it carries every
+indicator plus four lag columns; the full column list is in the schema section.
 
 ## Cross-cutting conventions
 
@@ -266,11 +272,24 @@ A JSON array with one object per pull (7 records: 6 tables, LFS split into 2 par
 | `sha256` | string | Checksum of the raw response, for change detection |
 | `note` | string | Human note on the table's role and caveats |
 
-## Processed layer schema (Phase 3 plan)
+`bytes` and `sha256` describe the response **as served**, which for PSA's CSV export means CRLF
+line endings. The extracts are committed with exactly those bytes — `.gitattributes` marks
+`data/raw/**` as `-text`, so git stores and checks them out without any line-ending conversion —
+and the checksum verifies directly against the file in the repository on every platform. That was
+not always so; see cleaning-log entry 14.
 
-Everything above describes what `ingest.py` lands. This section is the **design for
-`data/processed/`** — written before any transformation code, so Weeks 9–10 have a target to build
-against rather than a shape that emerges by accident. Nothing here exists yet.
+## Processed layer schema
+
+Everything above describes what `ingest.py` lands. This section describes the four files in
+`data/processed/` that `scripts/transform.py` builds from them. It was written as a design before
+any transformation code existed, so Weeks 9–10 had a target to build against rather than a shape
+that emerged by accident; it has since been reconciled with the files as actually written.
+
+**Naming.** Column names in `analysis_quarterly` are exactly the `indicator_code` values in
+`dim_indicator`, with no unit suffix. The unit is a property of the indicator and lives in
+`dim_indicator.unit`; repeating it in the column name would be a second copy that can drift. Earlier
+drafts of this document used suffixed names (`underemployment_rate_pct`, `cpi_index_2018base`);
+those never existed in the files.
 
 ### Design decisions this schema encodes
 
@@ -370,7 +389,10 @@ Indicator rows, and which are model inputs:
 - **Grain:** one row = **one indicator's value for one quarter**
 - **Primary key:** composite, `(quarter_id, indicator_code)`
 - **Foreign keys:** `quarter_id` → `dim_quarter`, `indicator_code` → `dim_indicator`
-- **Rows:** up to 83 × 14 = 1 162, fewer where a derived series has no value at the window start
+- **Rows:** exactly 83 × 14 = **1 162**. Every (quarter, indicator) pair has a row; where a derived
+  series has no value at the window start the row is present with an empty `value` and
+  `value_status = missing` (9 such rows), so the null pattern is visible in the fact rather than
+  implied by absence
 
 | Column | Meaning | Expected type |
 | --- | --- | --- |
@@ -390,22 +412,33 @@ into.
 - **Primary key:** `quarter_id`
 - **Rows:** 83
 
-| Column | Meaning | Expected type |
-| --- | --- | --- |
-| `quarter_id`, `year`, `quarter_num`, `quarter_start_date` | calendar keys from `dim_quarter` | string / int / int / date |
-| `underemployment_rate_pct` | the level | float |
-| **`underemployment_change_qoq_pp`** | `rate(t) − rate(t−1)` — **the model target** | float |
-| `unemployment_rate_pct`, `employment_rate_pct`, `lfpr_pct` | LFS context | float |
-| `gdp_growth_yoy_pct` | PSA published YoY growth, constant 2018 prices | float |
-| `gdp_growth_yoy_accel_pp` | `yoy(t) − yoy(t−1)` | float |
-| `inflation_yoy_pct` | computed from the stitched CPI index | float |
-| `inflation_yoy_accel_pp` | `yoy(t) − yoy(t−1)` | float |
-| `gdp_growth_yoy_pct_lag1`, `gdp_growth_yoy_accel_pp_lag1`, `inflation_yoy_pct_lag1`, `inflation_yoy_accel_pp_lag1` | one-quarter-ahead features | float |
-| `naive_forecast_change_pp` | ≡ 0, the no-change baseline the model must beat | float |
-| `cpi_index_2018base`, `gdp_level_mn_php_const2018` | source levels | float |
-| `gdp_growth_qoq_pct` | **diagnostic only, not seasonally adjusted** | float |
-| `underemployment_change_yoy_pp` | `rate(t) − rate(t−4)` | float |
-| `growth_employment_gap` | `gdp_growth_yoy_pct + underemployment_change_yoy_pp` — growth minus the *improvement* in job quality. The plus sign is deliberate: an improvement is a fall, so subtracting the change would score the best quarters highest. Large = the economy grew and job quality did not follow. | float |
+Columns in file order. Positions 5–18 are the 14 indicators in `dim_indicator` catalogue order;
+19–22 are the lags; 23 is the baseline.
+
+| # | Column | Meaning | Unit | Type |
+| --- | --- | --- | --- | --- |
+| 1–4 | `quarter_id`, `year`, `quarter_num`, `quarter_start_date` | calendar keys from `dim_quarter` | — | string / int / int / date |
+| 5 | **`underemployment_change_qoq`** | `rate(t) − rate(t−1)` — **the model target** | pp | float |
+| 6 | `underemployment_rate` | the level the target differences | percent | float |
+| 7–9 | `unemployment_rate`, `employment_rate`, `lfpr` | LFS context | percent | float |
+| 10 | `underemployment_change_yoy` | `rate(t) − rate(t−4)` — KPI input | pp | float |
+| 11 | `gdp_growth_yoy` | PSA published YoY growth, constant 2018 prices — predictor | percent | float |
+| 12 | `gdp_growth_yoy_accel` | `yoy(t) − yoy(t−1)` — predictor | pp | float |
+| 13 | `gdp_level` | GDP at constant 2018 prices — source level | million PHP | float (integer-valued) |
+| 14 | `gdp_growth_qoq` | **diagnostic only, not seasonally adjusted** | percent | float |
+| 15 | `cpi_index` | quarterly mean of the stitched monthly index — source level | index, 2018=100 | float |
+| 16 | `inflation_yoy` | computed from `cpi_index` — predictor | percent | float |
+| 17 | `inflation_yoy_accel` | `yoy(t) − yoy(t−1)` — predictor | pp | float |
+| 18 | `growth_employment_gap` | `gdp_growth_yoy + underemployment_change_yoy` — growth minus the *improvement* in job quality. The plus sign is deliberate: an improvement is a fall, so subtracting the change would score the best quarters highest. Large = the economy grew and job quality did not follow. | pp | float |
+| 19–22 | `gdp_growth_yoy_lag1`, `gdp_growth_yoy_accel_lag1`, `inflation_yoy_lag1`, `inflation_yoy_accel_lag1` | the four predictors at `t−1` — the one-quarter-ahead features | as the base column | float |
+| 23 | `naive_forecast_change_pp` | ≡ 0, the no-change baseline the model must beat | pp | float |
+
+**Number format.** Every measure is written fixed-point with **up to four decimal places**, trailing
+zeros dropped, so `26.135`, `2195369` and `101.1333` appear exactly so. Four decimals is the finest
+precision any source publishes (CPI index to four; rates to three; GDP levels as integers), so
+nothing is lost, and there is no exponent notation. An earlier version used a six-significant-figure
+format that wrote `gdp_level` as `2.19537e+06`; see cleaning-log entry 13. Missing values are empty
+fields, never `0`.
 
 **Two different quantities, deliberately both present.** The *model target* is the QoQ change. The
 *headline dashboard KPI* `growth_employment_gap` is computed year-on-year on both sides, so the
@@ -415,19 +448,28 @@ questions and must not be swapped for one another.
 
 ### Expected null pattern
 
-Not data quality problems — arithmetic consequences of differencing at the window start, and the
-Week 11 validation asserts they appear exactly here and nowhere else:
+Not data quality problems — arithmetic consequences of differencing at the window start. The
+validation in `transform.py` asserts they appear exactly here and nowhere else, and the observed
+pattern matches:
 
-| Column | Null at | Why |
-| --- | --- | --- |
-| `underemployment_change_qoq_pp` | 2005Q2 | no 2005Q1 to difference from |
-| `underemployment_change_yoy_pp`, `growth_employment_gap` | 2005Q2 – 2006Q1 | needs `t−4` |
-| all `*_lag1` columns | 2005Q2 | needs `t−1` |
+| Column | Null at | Count | Why |
+| --- | --- | --- | --- |
+| `underemployment_change_qoq` | 2005Q2 | 1 | no 2005Q1 LFS round to difference from |
+| `underemployment_change_yoy`, `growth_employment_gap` | 2005Q2 – 2006Q1 | 4 each | needs `t−4`, and the LFS starts at 2005Q2 |
+
+Every other column — including all four `*_lag1` columns — is **complete across all 83 quarters**.
+The lags are not null at 2005Q2 because they are taken from the full 1994–2026 span before the
+window is clipped, and GDP and CPI both have real 2005Q1 values (cleaning-log entry 10). An earlier
+draft of this table listed the lags as null at 2005Q2; that described the bug entry 10 records, not
+the data. The `*_lag1` columns are not covered by the null-pattern check, which runs on the
+indicator frame before the lags are joined.
 
 ### Storage
 
 CSV is the committed format — diffable in git, readable without tooling, and the Milestone 3
-deliverable. `scripts/load_db.py` loads the four CSVs into `data/processed/underemployment.db`
+deliverable. UTF-8, no BOM, header row, comma-separated, **LF line endings** written explicitly by
+`transform.py` and pinned by `.gitattributes`, so a rebuild on any platform is byte-identical to the
+committed file and `--check-reproducible` can compare checksums. `scripts/load_db.py` loads the four CSVs into `data/processed/underemployment.db`
 (SQLite, stdlib `sqlite3`) with explicit DDL — declared types, `PRIMARY KEY`, `FOREIGN KEY`,
 `PRAGMA foreign_keys = ON` — so the keys above are enforced by the database rather than merely
 described here. The `.db` is a rebuildable build artefact and is gitignored; the CSVs are the
@@ -505,6 +547,7 @@ assumption broke, and quietly dropping it would hide that.
 | `Year` + `Month` / period column labels | `PeriodIndex(freq="Q")` | Makes quarter arithmetic real rather than integer bookkeeping |
 | Quarter boundaries | `datetime64`, rendered ISO at write | Held as dates through the pipeline, formatted only at the boundary |
 | `indicator_code` | ordered `Categorical` | Fixes catalogue order when sorting the fact, so row order is stable across runs |
+| Measures (`float64`) | fixed-point text, ≤ 4 decimals, trailing zeros dropped, at write | Full precision through the pipeline; the formatting exists only so a rerun is byte-identical. `NaN` → empty field |
 
 ### Join keys
 

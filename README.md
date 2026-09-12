@@ -5,7 +5,7 @@ PSA OpenSTAT data. Reproducing everything from the committed raw extracts takes 
 and no network access:
 
 ```bash
-python -m venv venv && venv\Scripts\activate
+python -m venv venv && source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 python scripts/run_all.py --check
 ```
@@ -165,7 +165,7 @@ Read live from `/api/v1/en/?config`: `{"maxValues": 1000, "maxCalls": 10, "timeW
    *target* — the change in the underemployment rate — not the predictors' base period. GDP growth
    enters the model on PSA's published **year-on-year** basis, alongside its one-quarter
    acceleration. The reasoning, and the measurements behind it, are in
-   [`data/data_dictionary.md`](data/data_dictionary.md#processed-layer-schema-phase-3-plan).
+   [`data/data_dictionary.md`](data/data_dictionary.md#processed-layer-schema).
    `qna_gdp_levels` is still used, but only to compute a diagnostic QoQ column that is explicitly
    flagged as not a model input.
 5. **Missing values arrive as `.`** — meaningful (the survey did not run), preserved verbatim.
@@ -190,7 +190,7 @@ Example: `psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv`
 
 **See [`data/data_dictionary.md`](data/data_dictionary.md)** for every field, its type and unit, the
 entity-relationship diagram, and the conventions (missing-value markers, wide vs long layouts,
-aggregate rows) that `transform.py` will need to respect.
+aggregate rows) that `transform.py` respects.
 
 `_manifest.json` records, per pull: table id, resolved title, **full source URL**, the **exact POST
 body sent**, UTC **retrieval timestamp**, HTTP status, cell count, byte size and SHA-256. That is
@@ -198,11 +198,20 @@ the source-and-access-date record for every file, and it makes any pull reproduc
 against a later one.
 
 Raw extracts are committed on purpose — `.gitignore` deliberately does **not** exclude `data/raw/`.
+They are stored **byte-for-byte as the API served them** (`data/raw/** -text` in `.gitattributes`,
+so git never rewrites their line endings), which is what lets the manifest's SHA-256 verify
+directly against the file in the repository:
+
+```bash
+python -c "import json,hashlib,pathlib;r=pathlib.Path('data/raw');[print(hashlib.sha256((r/m['output_file']).read_bytes()).hexdigest()==m['sha256'],m['output_file']) for m in json.load(open(r/'_manifest.json',encoding='utf-8'))]"
+```
+
+Every line should print `True`. See cleaning-log entry 14 for why this needed pinning.
 
 ## Processed Data Plan (Phase 3, Week 7)
 
 Full schema — every column, type, key and null expectation — is in
-**[`data/data_dictionary.md` → Processed layer schema](data/data_dictionary.md#processed-layer-schema-phase-3-plan)**.
+**[`data/data_dictionary.md` → Processed layer schema](data/data_dictionary.md#processed-layer-schema)**.
 Summary:
 
 ### Main table
@@ -215,18 +224,21 @@ Summary:
 
 ### Important columns
 
-| Column | Meaning | Expected type |
-| --- | --- | --- |
-| `quarter_id` | quarter identifier, `YYYYQn` | string |
-| `quarter_num` | 1–4; source of the seasonal dummies | integer |
-| `underemployment_rate_pct` | the headline level | float |
-| `underemployment_change_qoq_pp` | `rate(t) − rate(t−1)` — **the model target** | float |
-| `gdp_growth_yoy_pct` | PSA published YoY growth, constant 2018 prices — **predictor** | float |
-| `gdp_growth_yoy_accel_pp` | `yoy(t) − yoy(t−1)` — **predictor** | float |
-| `inflation_yoy_pct` | computed from the stitched 1994–2025 CPI index — **predictor** | float |
-| `inflation_yoy_accel_pp` | `yoy(t) − yoy(t−1)` — **predictor** | float |
-| `naive_forecast_change_pp` | ≡ 0, the no-change baseline the model must beat | float |
-| `growth_employment_gap` | `gdp_growth_yoy_pct + underemployment_change_yoy_pp` — the dashboard KPI; large = growth without job-quality gains | float |
+Column names are the `indicator_code` values from `dim_indicator`; the unit lives in that table's
+`unit` column rather than in a name suffix.
+
+| Column | Meaning | Unit | Type |
+| --- | --- | --- | --- |
+| `quarter_id` | quarter identifier, `YYYYQn` | — | string |
+| `quarter_num` | 1–4; source of the seasonal dummies | — | integer |
+| `underemployment_rate` | the headline level | percent | float |
+| `underemployment_change_qoq` | `rate(t) − rate(t−1)` — **the model target** | pp | float |
+| `gdp_growth_yoy` | PSA published YoY growth, constant 2018 prices — **predictor** | percent | float |
+| `gdp_growth_yoy_accel` | `yoy(t) − yoy(t−1)` — **predictor** | pp | float |
+| `inflation_yoy` | computed from the stitched 1994–2025 CPI index — **predictor** | percent | float |
+| `inflation_yoy_accel` | `yoy(t) − yoy(t−1)` — **predictor** | pp | float |
+| `naive_forecast_change_pp` | ≡ 0, the no-change baseline the model must beat | pp | float |
+| `growth_employment_gap` | `gdp_growth_yoy + underemployment_change_yoy` — the dashboard KPI; large = growth without job-quality gains | pp | float |
 
 ### Related tables
 
@@ -239,7 +251,7 @@ small star schema rather than joined directly:
   this is where the six sources actually meet
 - `analysis_quarterly` — a pivot of the fact, not a second source of truth
 
-`scripts/load_db.py` will load all four into `data/processed/underemployment.db` (SQLite) with
+`scripts/load_db.py` loads all four into `data/processed/underemployment.db` (SQLite) with
 explicit `PRIMARY KEY` / `FOREIGN KEY` DDL, so the keys are enforced rather than just documented.
 
 ### Data quality and reproducibility
@@ -381,9 +393,19 @@ Rebuilds the whole processed layer into a scratch directory and compares checksu
 `data/processed/`. It writes nothing and exits non-zero on any difference. Expect all four files
 identical; `_transform_report.json` is excluded because it records the run timestamp.
 
+On a fresh clone, run this check **before** building anything: it compares against the committed
+files, so it is only meaningful while they are still the committed bytes. `run_all.py --check`
+runs it after the build, which proves determinism but not that the checkout matched.
+
 ```bash
 git status --short
 ```
 
 After a run, `data/processed/*.csv` should be **unchanged**. Only `_transform_report.json` differs,
 by its timestamp. A modified CSV means the code and the committed dataset have drifted apart.
+
+**Line endings.** The check compares raw bytes, so line endings are part of it. `transform.py`
+writes LF explicitly and `.gitattributes` pins every text file to LF on checkout regardless of
+`core.autocrlf`, so the committed bytes and a rebuild agree on Windows, macOS and Linux alike. If
+`git status` reports CSVs as modified immediately after cloning on Windows, the checkout predates
+`.gitattributes`; run `git add --renormalize .` once.

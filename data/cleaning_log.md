@@ -219,6 +219,73 @@ approximation gap is expected and correct.
 
 ---
 
+## 13. Measures are written with four decimal places, not six significant figures
+
+**Rule.** Every numeric value in the processed CSVs is rendered fixed-point with up to four
+decimal places, trailing zeros dropped. No exponent notation.
+
+**Why.** The first version formatted with Python's `:g`, which keeps six *significant* figures.
+That is invisible on a rate like `26.135` and destructive on anything with more than six digits.
+`gdp_level` values are seven-digit integers (million pesos), so `2195369` was written as
+`2.19537e+06` — which reads back as 2 195 370. A CPI index above 100 has three digits before the
+point and so lost its fourth decimal.
+
+**Evidence.** Diffing the regenerated files against the committed ones: all 83 `gdp_level` cells
+changed representation and **78 of 83 were numerically wrong**, by up to 5 million pesos (2005Q3,
+`2.11798e+06` for 2 117 985). 18 `cpi_index` cells changed, all 2018Q3 onward where the index
+exceeds 100, by up to 0.0003 (e.g. `101.133` for 101.1333). Nothing else moved: `dim_quarter` and
+`dim_indicator` are byte-identical, no derived column changed, and `output/sql_results.md` is
+unchanged, because the derived columns were computed from the full-precision values in memory and
+only the *written* levels were truncated.
+
+**How it surfaced.** A Milestone 3 audit read the CSVs rather than the report. The
+reproducibility check could not catch it — the truncation was deterministic, so the file
+reproduced itself exactly — and no validation check compared a written value back to its raw
+source. That gap is still open: the checks run on the in-memory frame, before formatting.
+
+**Alternative rejected.** Write full `repr()` precision (up to 17 digits). It would expose
+floating-point noise like `7.066900000000001` in the diff on every pandas upgrade for no gain in
+information; four decimals is already finer than any source publishes.
+
+**What would change this.** A source publishing at more than four decimal places.
+
+---
+
+## 14. Line endings are LF, written explicitly and pinned in git
+
+**Rule.** `transform.py` writes rows terminated by `\n`, and `.gitattributes` sets every text
+file to LF on checkout. Raw extracts in `data/raw/` are marked `-text` and stored exactly as the
+API served them, CRLF included.
+
+**Why.** Python's `csv.writer` defaults to `\r\n`. The repository was committed from Windows with
+`core.autocrlf=true`, which stripped the CR on the way in — so git held LF while every rebuild
+wrote CRLF. On Windows the same conversion runs in reverse on checkout, the working copy is CRLF,
+and the bytes match. On Linux and macOS nothing converts, and the committed LF file is not the
+CRLF file the script writes.
+
+**Evidence.** On Linux, `python scripts/transform.py --check-reproducible` failed on **all four**
+CSVs before this change. The SHA-256 values recorded in `_transform_report.json` matched no file
+in the repository, for the same reason: they were computed over the CRLF bytes the script had
+just written, not the LF bytes git stored. The reproducibility claim held only on the machine it
+was written on.
+
+**The raw-manifest consequence.** The same conversion had silently altered the raw extracts.
+`_manifest.json` records the SHA-256 of each response *as served*, which is CRLF; git had
+normalised the committed copies to LF, so none of the seven recorded checksums matched the file
+in the repository. On this Windows checkout the working copies were still the original CRLF
+bytes — all seven hash to the manifest values exactly — so with `data/raw/** -text` in place they
+were re-staged as-is. The raw files in git are now the served bytes, the manifest verifies
+directly on every platform, and the README shows the one-line check.
+
+**Alternative rejected.** Leave CRLF as the output format and mark the CSVs `-text` too. It
+would work, but every diff and every tool that reads the files would carry the CR, for no reason
+other than a library default.
+
+**What would change this.** Nothing about the data. If a future raw pull is served with
+different line endings, `-text` stores it faithfully and the manifest records what arrived.
+
+---
+
 ## Reproducibility
 
 `python scripts/transform.py --check-reproducible` rebuilds the entire processed layer into a
