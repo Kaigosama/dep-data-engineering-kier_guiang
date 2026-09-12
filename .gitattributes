@@ -1,0 +1,16 @@
+# Line endings are part of reproducibility here: transform.py writes LF and the
+# --check-reproducible run compares SHA-256 of the committed files against a
+# rebuild. If git rewrote endings on checkout, the check would pass on one
+# platform and fail on another. Pin everything to LF regardless of core.autocrlf.
+* text=auto eol=lf
+
+*.csv  text eol=lf
+*.json text eol=lf
+*.md   text eol=lf
+*.py   text eol=lf
+*.sql  text eol=lf
+
+# Raw PSA extracts are stored byte-for-byte as the API served them, so the
+# SHA-256 recorded in data/raw/_manifest.json at pull time verifies directly
+# against the file in the repository. No conversion in either direction.
+data/raw/** -text
