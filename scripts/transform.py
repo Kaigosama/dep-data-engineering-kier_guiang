@@ -67,6 +67,15 @@ THE RULES THIS SCRIPT ENCODES  (reasoning in data/data_dictionary.md)
     figure is unpublished. They are NOT zeros and are never imputed.
   * The window is 2005Q2-2025Q4: 83 quarters, no gaps.
 
+OUTPUT FORMAT  (two fixes after the Milestone 3 audit)
+------------------------------------------------------
+  * Measures are written fixed-point with up to four decimal places, trailing
+    zeros dropped. The first version used :g, which keeps six significant
+    figures and wrote gdp_level 2195369 as 2.19537e+06 and truncated CPI index
+    values above 100 to three decimals. See cleaning_log.md entry 13.
+  * Rows end in LF, not csv.writer's default CRLF, so a rebuild produces the
+    same bytes on every platform as the committed files. See entry 14.
+
 Usage
 -----
     python scripts/transform.py
@@ -760,13 +769,30 @@ def validate(frame: pd.DataFrame, fact: pd.DataFrame, diagnostics: dict) -> list
 
 
 def fmt(value) -> str:
-    """Fixed precision so a rerun is byte-identical. NaN becomes empty, not 0."""
-    return "" if pd.isna(value) else f"{round(float(value), 4):g}"
+    """Render a measure with up to four decimal places, trailing zeros dropped.
+
+    Fixed-point, NOT the :g format the first version used. :g keeps six
+    SIGNIFICANT figures, which is fine for a rate like 26.135 but turns a GDP
+    level of 2195369 into 2.19537e+06 - a value off by up to five million pesos
+    - and drops the fourth decimal of any CPI index above 100. Four decimal
+    places is the finest precision any source publishes, so nothing is lost.
+
+    NaN becomes an empty field, never 0. A negative zero ("-0") is normalised so
+    a rerun cannot flip sign on a rounding boundary.
+    """
+    if pd.isna(value):
+        return ""
+    text = f"{float(value):.4f}".rstrip("0").rstrip(".")
+    return "0" if text in ("-0", "") else text
 
 
 def write_csv(path: Path, header: list[str], rows: list[list]) -> str:
+    # lineterminator="\n" is deliberate: csv.writer defaults to "\r\n", and the
+    # repository stores LF (see .gitattributes). Without it a rebuild on Linux
+    # writes different bytes from the committed files and the reproducibility
+    # check fails on every CSV - while passing on Windows, where autocrlf hid it.
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.writer(handle)
+        writer = csv.writer(handle, lineterminator="\n")
         writer.writerow(header)
         writer.writerows(rows)
     return hashlib.sha256(path.read_bytes()).hexdigest()

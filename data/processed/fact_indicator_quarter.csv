@@ -7,7 +7,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2005Q2,underemployment_change_yoy,,missing,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2005Q2,gdp_growth_yoy,5.7,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2005Q2,gdp_growth_yoy_accel,0.7,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2005Q2,gdp_level,2.19537e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2005Q2,gdp_level,2195369,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2005Q2,gdp_growth_qoq,5.9981,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2005Q2,cpi_index,61.5523,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2005Q2,inflation_yoy,7.0669,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -21,7 +21,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2005Q3,underemployment_change_yoy,,missing,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2005Q3,gdp_growth_yoy,4.4,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2005Q3,gdp_growth_yoy_accel,-1.3,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2005Q3,gdp_level,2.11798e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2005Q3,gdp_level,2117985,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2005Q3,gdp_growth_qoq,-3.5249,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2005Q3,cpi_index,62.6663,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2005Q3,inflation_yoy,6.0237,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -35,7 +35,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2005Q4,underemployment_change_yoy,,missing,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2005Q4,gdp_growth_yoy,4.7,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2005Q4,gdp_growth_yoy_accel,0.3,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2005Q4,gdp_level,2.38983e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2005Q4,gdp_level,2389831,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2005Q4,gdp_growth_qoq,12.8351,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2005Q4,cpi_index,63.4963,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2005Q4,inflation_yoy,6.0949,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -49,7 +49,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2006Q1,underemployment_change_yoy,,missing,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2006Q1,gdp_growth_yoy,4.5,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2006Q1,gdp_growth_yoy_accel,-0.2,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2006Q1,gdp_level,2.16438e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2006Q1,gdp_level,2164381,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2006Q1,gdp_growth_qoq,-9.4337,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2006Q1,cpi_index,64.654,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2006Q1,inflation_yoy,6.3218,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -63,7 +63,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2006Q2,underemployment_change_yoy,-0.726,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2006Q2,gdp_growth_yoy,5.9,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2006Q2,gdp_growth_yoy_accel,1.4,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2006Q2,gdp_level,2.32531e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2006Q2,gdp_level,2325314,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2006Q2,gdp_growth_qoq,7.4355,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2006Q2,cpi_index,65.2874,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2006Q2,inflation_yoy,6.0681,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -77,7 +77,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2006Q3,underemployment_change_yoy,2.96,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2006Q3,gdp_growth_yoy,4.7,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2006Q3,gdp_growth_yoy_accel,-1.2,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2006Q3,gdp_level,2.21759e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2006Q3,gdp_level,2217593,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2006Q3,gdp_growth_qoq,-4.6325,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2006Q3,cpi_index,65.9208,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2006Q3,inflation_yoy,5.1934,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -91,7 +91,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2006Q4,underemployment_change_yoy,-0.863,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2006Q4,gdp_growth_yoy,6,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2006Q4,gdp_growth_yoy_accel,1.3,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2006Q4,gdp_level,2.53352e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2006Q4,gdp_level,2533516,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2006Q4,gdp_growth_qoq,14.2462,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2006Q4,cpi_index,66.2485,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2006Q4,inflation_yoy,4.3344,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -105,7 +105,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2007Q1,underemployment_change_yoy,0.358,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2007Q1,gdp_growth_yoy,6.2,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2007Q1,gdp_growth_yoy_accel,0.2,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2007Q1,gdp_level,2.2978e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2007Q1,gdp_level,2297797,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2007Q1,gdp_growth_qoq,-9.304,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2007Q1,cpi_index,66.6635,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2007Q1,inflation_yoy,3.1081,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -119,7 +119,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2007Q2,underemployment_change_yoy,-6.485,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2007Q2,gdp_growth_yoy,6.8,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2007Q2,gdp_growth_yoy_accel,0.6,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2007Q2,gdp_level,2.48442e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2007Q2,gdp_level,2484417,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2007Q2,gdp_growth_qoq,8.1217,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2007Q2,cpi_index,67.013,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2007Q2,inflation_yoy,2.643,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -133,7 +133,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2007Q3,underemployment_change_yoy,-1.449,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2007Q3,gdp_growth_yoy,6.5,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2007Q3,gdp_growth_yoy_accel,-0.3,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2007Q3,gdp_level,2.36277e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2007Q3,gdp_level,2362773,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2007Q3,gdp_growth_qoq,-4.8963,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2007Q3,cpi_index,67.7774,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2007Q3,inflation_yoy,2.8164,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -147,7 +147,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2007Q4,underemployment_change_yoy,-2.172,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2007Q4,gdp_growth_yoy,6.5,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2007Q4,gdp_growth_yoy_accel,0,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2007Q4,gdp_level,2.69825e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2007Q4,gdp_level,2698252,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2007Q4,gdp_growth_qoq,14.1985,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2007Q4,cpi_index,68.3672,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2007Q4,inflation_yoy,3.1982,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -161,7 +161,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2008Q1,underemployment_change_yoy,-2.605,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2008Q1,gdp_growth_yoy,4.2,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2008Q1,gdp_growth_yoy_accel,-2.3,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2008Q1,gdp_level,2.39361e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2008Q1,gdp_level,2393607,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2008Q1,gdp_growth_qoq,-11.2905,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2008Q1,cpi_index,70.1364,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2008Q1,inflation_yoy,5.2097,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -175,7 +175,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2008Q2,underemployment_change_yoy,0.831,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2008Q2,gdp_growth_yoy,4.8,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2008Q2,gdp_growth_yoy_accel,0.6,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2008Q2,gdp_level,2.603e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2008Q2,gdp_level,2602999,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2008Q2,gdp_growth_qoq,8.748,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2008Q2,cpi_index,72.5828,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2008Q2,inflation_yoy,8.3116,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -189,7 +189,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2008Q3,underemployment_change_yoy,-0.908,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2008Q3,gdp_growth_yoy,5.4,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2008Q3,gdp_growth_yoy_accel,0.6,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2008Q3,gdp_level,2.4912e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2008Q3,gdp_level,2491196,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2008Q3,gdp_growth_qoq,-4.2952,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2008Q3,cpi_index,74.7452,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2008Q3,inflation_yoy,10.2804,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -203,7 +203,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2008Q4,underemployment_change_yoy,-0.685,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2008Q4,gdp_growth_yoy,3.1,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2008Q4,gdp_growth_yoy_accel,-2.3,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2008Q4,gdp_level,2.78308e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2008Q4,gdp_level,2783075,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2008Q4,gdp_growth_qoq,11.7164,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2008Q4,cpi_index,74.4394,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2008Q4,inflation_yoy,8.8818,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -217,7 +217,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2009Q1,underemployment_change_yoy,-0.693,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2009Q1,gdp_growth_yoy,1.1,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2009Q1,gdp_growth_yoy_accel,-2,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2009Q1,gdp_level,2.42035e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2009Q1,gdp_level,2420350,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2009Q1,gdp_growth_qoq,-13.0332,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2009Q1,cpi_index,75.0292,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2009Q1,inflation_yoy,6.976,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -231,7 +231,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2009Q2,underemployment_change_yoy,-0.837,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2009Q2,gdp_growth_yoy,1.9,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2009Q2,gdp_growth_yoy_accel,0.8,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2009Q2,gdp_level,2.65225e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2009Q2,gdp_level,2652252,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2009Q2,gdp_growth_qoq,9.5813,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2009Q2,cpi_index,75.75,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2009Q2,inflation_yoy,4.3635,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -245,7 +245,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2009Q3,underemployment_change_yoy,-1.27,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2009Q3,gdp_growth_yoy,0.9,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2009Q3,gdp_growth_yoy_accel,-1,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2009Q3,gdp_level,2.51431e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2009Q3,gdp_level,2514311,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2009Q3,gdp_growth_qoq,-5.2009,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2009Q3,cpi_index,76.296,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2009Q3,inflation_yoy,2.0748,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -259,7 +259,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2009Q4,underemployment_change_yoy,1.922,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2009Q4,gdp_growth_yoy,1.8,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2009Q4,gdp_growth_yoy_accel,0.9,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2009Q4,gdp_level,2.83272e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2009Q4,gdp_level,2832721,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2009Q4,gdp_growth_qoq,12.6639,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2009Q4,cpi_index,77.1261,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2009Q4,inflation_yoy,3.6092,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -273,7 +273,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2010Q1,underemployment_change_yoy,1.535,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2010Q1,gdp_growth_yoy,8.1,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2010Q1,gdp_growth_yoy_accel,6.3,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2010Q1,gdp_level,2.61689e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2010Q1,gdp_level,2616891,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2010Q1,gdp_growth_qoq,-7.6192,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2010Q1,cpi_index,77.9561,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2010Q1,inflation_yoy,3.901,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -287,7 +287,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2010Q2,underemployment_change_yoy,-1.137,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2010Q2,gdp_growth_yoy,8,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2010Q2,gdp_growth_yoy_accel,-0.1,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2010Q2,gdp_level,2.86377e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2010Q2,gdp_level,2863767,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2010Q2,gdp_growth_qoq,9.4339,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2010Q2,cpi_index,78.655,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2010Q2,inflation_yoy,3.8351,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -301,7 +301,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2010Q3,underemployment_change_yoy,-1.869,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2010Q3,gdp_growth_yoy,7.1,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2010Q3,gdp_growth_yoy_accel,-0.9,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2010Q3,gdp_level,2.69205e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2010Q3,gdp_level,2692052,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2010Q3,gdp_growth_qoq,-5.9961,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2010Q3,cpi_index,79.2448,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2010Q3,inflation_yoy,3.8649,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -315,7 +315,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2010Q4,underemployment_change_yoy,0.192,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2010Q4,gdp_growth_yoy,6.3,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2010Q4,gdp_growth_yoy_accel,-0.8,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2010Q4,gdp_level,3.01115e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2010Q4,gdp_level,3011152,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2010Q4,gdp_growth_qoq,11.8534,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2010Q4,cpi_index,79.8564,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2010Q4,inflation_yoy,3.5401,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -329,7 +329,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2011Q1,underemployment_change_yoy,-0.317,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2011Q1,gdp_growth_yoy,4.8,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2011Q1,gdp_growth_yoy_accel,-1.5,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2011Q1,gdp_level,2.74321e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2011Q1,gdp_level,2743209,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2011Q1,gdp_growth_qoq,-8.8984,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2011Q1,cpi_index,81.4727,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2011Q1,inflation_yoy,4.5111,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -343,7 +343,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2011Q2,underemployment_change_yoy,1.576,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2011Q2,gdp_growth_yoy,3.6,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2011Q2,gdp_growth_yoy_accel,-1.2,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2011Q2,gdp_level,2.96573e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2011Q2,gdp_level,2965726,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2011Q2,gdp_growth_qoq,8.1116,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2011Q2,cpi_index,82.543,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2011Q2,inflation_yoy,4.9431,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -357,7 +357,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2011Q3,underemployment_change_yoy,1.177,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2011Q3,gdp_growth_yoy,3,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2011Q3,gdp_growth_yoy_accel,-0.6,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2011Q3,gdp_level,2.77378e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2011Q3,gdp_level,2773776,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2011Q3,gdp_growth_qoq,-6.4723,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2011Q3,cpi_index,83.0017,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2011Q3,inflation_yoy,4.7409,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -371,7 +371,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2011Q4,underemployment_change_yoy,-0.425,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2011Q4,gdp_growth_yoy,4,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2011Q4,gdp_growth_yoy_accel,1,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2011Q4,gdp_level,3.13265e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2011Q4,gdp_level,3132650,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2011Q4,gdp_growth_qoq,12.9381,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2011Q4,cpi_index,83.5915,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2011Q4,inflation_yoy,4.6772,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -385,7 +385,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2012Q1,underemployment_change_yoy,-0.627,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2012Q1,gdp_growth_yoy,6,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2012Q1,gdp_growth_yoy_accel,2,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2012Q1,gdp_level,2.9089e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2012Q1,gdp_level,2908899,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2012Q1,gdp_growth_qoq,-7.1425,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2012Q1,cpi_index,84.1716,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2012Q1,inflation_yoy,3.3127,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -399,7 +399,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2012Q2,underemployment_change_yoy,-0.031,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2012Q2,gdp_growth_yoy,6.2,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2012Q2,gdp_growth_yoy_accel,0.2,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2012Q2,gdp_level,3.15017e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2012Q2,gdp_level,3150174,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2012Q2,gdp_growth_qoq,8.2944,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2012Q2,cpi_index,84.9673,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2012Q2,inflation_yoy,2.937,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -413,7 +413,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2012Q3,underemployment_change_yoy,3.685,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2012Q3,gdp_growth_yoy,7.4,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2012Q3,gdp_growth_yoy_accel,1.2,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2012Q3,gdp_level,2.97902e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2012Q3,gdp_level,2979022,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2012Q3,gdp_growth_qoq,-5.4331,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2012Q3,cpi_index,85.8767,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2012Q3,inflation_yoy,3.4637,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -427,7 +427,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2012Q4,underemployment_change_yoy,-0.139,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2012Q4,gdp_growth_yoy,7.8,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2012Q4,gdp_growth_yoy_accel,0.4,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2012Q4,gdp_level,3.37837e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2012Q4,gdp_level,3378370,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2012Q4,gdp_growth_qoq,13.4053,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2012Q4,cpi_index,86.0756,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2012Q4,inflation_yoy,2.9718,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -441,7 +441,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2013Q1,underemployment_change_yoy,2.113,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2013Q1,gdp_growth_yoy,7.6,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2013Q1,gdp_growth_yoy_accel,-0.2,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2013Q1,gdp_level,3.12978e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2013Q1,gdp_level,3129776,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2013Q1,gdp_growth_qoq,-7.3584,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2013Q1,cpi_index,86.5587,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2013Q1,inflation_yoy,2.8359,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -455,7 +455,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2013Q2,underemployment_change_yoy,-0.153,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2013Q2,gdp_growth_yoy,7.5,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2013Q2,gdp_growth_yoy_accel,-0.1,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2013Q2,gdp_level,3.38683e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2013Q2,gdp_level,3386829,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2013Q2,gdp_growth_qoq,8.2131,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2013Q2,cpi_index,86.9565,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2013Q2,inflation_yoy,2.3411,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -469,7 +469,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2013Q3,underemployment_change_yoy,-3.578,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2013Q3,gdp_growth_yoy,6.7,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2013Q3,gdp_growth_yoy_accel,-0.8,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2013Q3,gdp_level,3.17888e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2013Q3,gdp_level,3178884,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2013Q3,gdp_growth_qoq,-6.1398,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2013Q3,cpi_index,87.7238,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2013Q3,inflation_yoy,2.1509,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -483,7 +483,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2013Q4,underemployment_change_yoy,-0.945,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2013Q4,gdp_growth_yoy,5.4,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2013Q4,gdp_growth_yoy_accel,-1.3,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2013Q4,gdp_level,3.55916e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2013Q4,gdp_level,3559155,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2013Q4,gdp_growth_qoq,11.9624,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2013Q4,cpi_index,88.6616,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2013Q4,inflation_yoy,3.0043,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -497,7 +497,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2014Q1,underemployment_change_yoy,-1.406,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2014Q1,gdp_growth_yoy,5.7,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2014Q1,gdp_growth_yoy_accel,0.3,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2014Q1,gdp_level,3.30814e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2014Q1,gdp_level,3308136,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2014Q1,gdp_growth_qoq,-7.0528,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2014Q1,cpi_index,89.713,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2014Q1,inflation_yoy,3.6441,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -511,7 +511,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2014Q2,underemployment_change_yoy,-0.998,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2014Q2,gdp_growth_yoy,6.9,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2014Q2,gdp_growth_yoy_accel,1.2,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2014Q2,gdp_level,3.62176e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2014Q2,gdp_level,3621756,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2014Q2,gdp_growth_qoq,9.4803,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2014Q2,cpi_index,90.2813,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2014Q2,inflation_yoy,3.8235,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -525,7 +525,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2014Q3,underemployment_change_yoy,-0.896,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2014Q3,gdp_growth_yoy,5.9,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2014Q3,gdp_growth_yoy_accel,-1,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2014Q3,gdp_level,3.36755e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2014Q3,gdp_level,3367554,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2014Q3,gdp_growth_qoq,-7.0188,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2014Q3,cpi_index,91.3043,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2014Q3,inflation_yoy,4.0816,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -539,7 +539,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2014Q4,underemployment_change_yoy,0.678,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2014Q4,gdp_growth_yoy,6.7,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2014Q4,gdp_growth_yoy_accel,0.8,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2014Q4,gdp_level,3.7986e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2014Q4,gdp_level,3798601,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2014Q4,gdp_growth_qoq,12.8,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2014Q4,cpi_index,91.1907,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2014Q4,inflation_yoy,2.8526,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -553,7 +553,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2015Q1,underemployment_change_yoy,-1.61,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2015Q1,gdp_growth_yoy,5.2,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2015Q1,gdp_growth_yoy_accel,-1.5,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2015Q1,gdp_level,3.4818e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2015Q1,gdp_level,3481797,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2015Q1,gdp_growth_qoq,-8.34,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2015Q1,cpi_index,91.077,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2015Q1,inflation_yoy,1.5204,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -567,7 +567,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2015Q2,underemployment_change_yoy,-0.342,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2015Q2,gdp_growth_yoy,6.4,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2015Q2,gdp_growth_yoy_accel,1.2,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2015Q2,gdp_level,3.8535e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2015Q2,gdp_level,3853504,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2015Q2,gdp_growth_qoq,10.6757,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2015Q2,cpi_index,91.1623,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2015Q2,inflation_yoy,0.9758,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -581,7 +581,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2015Q3,underemployment_change_yoy,2.65,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2015Q3,gdp_growth_yoy,6.6,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2015Q3,gdp_growth_yoy_accel,0.2,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2015Q3,gdp_level,3.58939e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2015Q3,gdp_level,3589388,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2015Q3,gdp_growth_qoq,-6.8539,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2015Q3,cpi_index,91.2475,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2015Q3,inflation_yoy,-0.0622,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -595,7 +595,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2015Q4,underemployment_change_yoy,-1.091,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2015Q4,gdp_growth_yoy,7,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2015Q4,gdp_growth_yoy_accel,0.4,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2015Q4,gdp_level,4.06622e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2015Q4,gdp_level,4066219,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2015Q4,gdp_growth_qoq,13.2845,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2015Q4,cpi_index,91.4464,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2015Q4,inflation_yoy,0.2805,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -609,7 +609,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2016Q1,underemployment_change_yoy,1.705,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2016Q1,gdp_growth_yoy,6.9,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2016Q1,gdp_growth_yoy_accel,-0.1,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2016Q1,gdp_level,3.72269e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2016Q1,gdp_level,3722688,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2016Q1,gdp_growth_qoq,-8.4484,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2016Q1,cpi_index,91.6169,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2016Q1,inflation_yoy,0.5928,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -623,7 +623,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2016Q2,underemployment_change_yoy,0.44,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2016Q2,gdp_growth_yoy,7.4,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2016Q2,gdp_growth_yoy_accel,0.5,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2016Q2,gdp_level,4.14019e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2016Q2,gdp_level,4140186,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2016Q2,gdp_growth_qoq,11.215,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2016Q2,cpi_index,92.0432,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2016Q2,inflation_yoy,0.9663,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -637,7 +637,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2016Q3,underemployment_change_yoy,-3.561,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2016Q3,gdp_growth_yoy,7.3,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2016Q3,gdp_growth_yoy_accel,-0.1,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2016Q3,gdp_level,3.85248e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2016Q3,gdp_level,3852483,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2016Q3,gdp_growth_qoq,-6.949,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2016Q3,cpi_index,92.5547,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2016Q3,inflation_yoy,1.4326,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -651,7 +651,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2016Q4,underemployment_change_yoy,0.366,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2016Q4,gdp_growth_yoy,6.9,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2016Q4,gdp_growth_yoy_accel,-0.4,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2016Q4,gdp_level,4.34732e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2016Q4,gdp_level,4347319,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2016Q4,gdp_growth_qoq,12.8446,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2016Q4,cpi_index,93.2935,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2016Q4,inflation_yoy,2.0199,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -665,7 +665,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2017Q1,underemployment_change_yoy,-3.34,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2017Q1,gdp_growth_yoy,6.4,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2017Q1,gdp_growth_yoy_accel,-0.5,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2017Q1,gdp_level,3.95998e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2017Q1,gdp_level,3959977,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2017Q1,gdp_growth_qoq,-8.9099,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2017Q1,cpi_index,94.2597,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2017Q1,inflation_yoy,2.8846,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -679,7 +679,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2017Q2,underemployment_change_yoy,-2.211,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2017Q2,gdp_growth_yoy,7.2,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2017Q2,gdp_growth_yoy_accel,0.8,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2017Q2,gdp_level,4.43733e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2017Q2,gdp_level,4437331,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2017Q2,gdp_growth_qoq,12.0545,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2017Q2,cpi_index,94.6576,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2017Q2,inflation_yoy,2.8404,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -693,7 +693,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2017Q3,underemployment_change_yoy,-1.138,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2017Q3,gdp_growth_yoy,7.5,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2017Q3,gdp_growth_yoy_accel,0.3,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2017Q3,gdp_level,4.14264e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2017Q3,gdp_level,4142636,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2017Q3,gdp_growth_qoq,-6.6413,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2017Q3,cpi_index,95.027,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2017Q3,inflation_yoy,2.6712,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -707,7 +707,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2017Q4,underemployment_change_yoy,-2.093,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2017Q4,gdp_growth_yoy,6.6,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2017Q4,gdp_growth_yoy_accel,-0.9,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2017Q4,gdp_level,4.63603e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2017Q4,gdp_level,4636033,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2017Q4,gdp_growth_qoq,11.9102,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2017Q4,cpi_index,96.1068,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2017Q4,inflation_yoy,3.0155,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -721,7 +721,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2018Q1,underemployment_change_yoy,1.696,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2018Q1,gdp_growth_yoy,6.5,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2018Q1,gdp_growth_yoy_accel,-0.1,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2018Q1,gdp_level,4.21558e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2018Q1,gdp_level,4215577,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2018Q1,gdp_growth_qoq,-9.0693,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2018Q1,cpi_index,97.8333,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2018Q1,inflation_yoy,3.7912,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -735,7 +735,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2018Q2,underemployment_change_yoy,0.896,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2018Q2,gdp_growth_yoy,6.4,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2018Q2,gdp_growth_yoy_accel,-0.1,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2018Q2,gdp_level,4.72038e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2018Q2,gdp_level,4720384,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2018Q2,gdp_growth_qoq,11.9748,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2018Q2,cpi_index,99.0667,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2018Q2,inflation_yoy,4.6579,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -749,9 +749,9 @@ quarter_id,indicator_code,value,value_status,source_file
 2018Q3,underemployment_change_yoy,0.944,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2018Q3,gdp_growth_yoy,6.1,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2018Q3,gdp_growth_yoy_accel,-0.3,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2018Q3,gdp_level,4.39724e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2018Q3,gdp_level,4397241,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2018Q3,gdp_growth_qoq,-6.8457,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
-2018Q3,cpi_index,101.133,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
+2018Q3,cpi_index,101.1333,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2018Q3,inflation_yoy,6.4259,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2018Q3,inflation_yoy_accel,1.768,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2018Q3,growth_employment_gap,7.044,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
@@ -763,7 +763,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2018Q4,underemployment_change_yoy,-2.61,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2018Q4,gdp_growth_yoy,6.4,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2018Q4,gdp_growth_yoy_accel,0.3,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2018Q4,gdp_level,4.93199e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2018Q4,gdp_level,4931989,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2018Q4,gdp_growth_qoq,12.161,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2018Q4,cpi_index,101.9,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2018Q4,inflation_yoy,6.0278,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -777,7 +777,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2019Q1,underemployment_change_yoy,-2.538,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2019Q1,gdp_growth_yoy,5.9,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2019Q1,gdp_growth_yoy_accel,-0.5,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2019Q1,gdp_level,4.46319e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2019Q1,gdp_level,4463186,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2019Q1,gdp_growth_qoq,-9.5054,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2019Q1,cpi_index,101.6,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2019Q1,inflation_yoy,3.8501,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -791,7 +791,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2019Q2,underemployment_change_yoy,-3.631,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2019Q2,gdp_growth_yoy,5.6,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2019Q2,gdp_growth_yoy_accel,-0.3,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2019Q2,gdp_level,4.98592e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2019Q2,gdp_level,4985924,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2019Q2,gdp_growth_qoq,11.7122,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2019Q2,cpi_index,102.1,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2019Q2,inflation_yoy,3.0619,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -805,7 +805,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2019Q3,underemployment_change_yoy,-3.59,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2019Q3,gdp_growth_yoy,6.3,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2019Q3,gdp_growth_yoy_accel,0.7,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2019Q3,gdp_level,4.67554e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2019Q3,gdp_level,4675544,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2019Q3,gdp_growth_qoq,-6.2251,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2019Q3,cpi_index,102.5,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2019Q3,inflation_yoy,1.3514,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -819,7 +819,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2019Q4,underemployment_change_yoy,-0.529,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2019Q4,gdp_growth_yoy,6.6,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2019Q4,gdp_growth_yoy_accel,0.3,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2019Q4,gdp_level,5.2581e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2019Q4,gdp_level,5258096,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2019Q4,gdp_growth_qoq,12.4596,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2019Q4,cpi_index,103.3,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2019Q4,inflation_yoy,1.3739,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -833,9 +833,9 @@ quarter_id,indicator_code,value,value_status,source_file
 2020Q1,underemployment_change_yoy,-0.612,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2020Q1,gdp_growth_yoy,-0.7,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2020Q1,gdp_growth_yoy_accel,-7.3,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2020Q1,gdp_level,4.43381e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2020Q1,gdp_level,4433806,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2020Q1,gdp_growth_qoq,-15.6766,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
-2020Q1,cpi_index,104.167,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
+2020Q1,cpi_index,104.1667,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2020Q1,inflation_yoy,2.5262,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2020Q1,inflation_yoy_accel,1.1524,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2020Q1,growth_employment_gap,-1.312,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
@@ -847,7 +847,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2020Q2,underemployment_change_yoy,5.585,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2020Q2,gdp_growth_yoy,-16.9,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2020Q2,gdp_growth_yoy_accel,-16.2,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2020Q2,gdp_level,4.14294e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2020Q2,gdp_level,4142943,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2020Q2,gdp_growth_qoq,-6.5601,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2020Q2,cpi_index,104,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2020Q2,inflation_yoy,1.8609,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -861,9 +861,9 @@ quarter_id,indicator_code,value,value_status,source_file
 2020Q3,underemployment_change_yoy,3.641,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2020Q3,gdp_growth_yoy,-11.6,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2020Q3,gdp_growth_yoy_accel,5.3,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2020Q3,gdp_level,4.1355e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2020Q3,gdp_level,4135499,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2020Q3,gdp_growth_qoq,-0.1797,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
-2020Q3,cpi_index,104.867,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
+2020Q3,cpi_index,104.8667,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2020Q3,inflation_yoy,2.3089,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2020Q3,inflation_yoy_accel,0.448,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2020Q3,growth_employment_gap,-7.959,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
@@ -875,9 +875,9 @@ quarter_id,indicator_code,value,value_status,source_file
 2020Q4,underemployment_change_yoy,1.643,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2020Q4,gdp_growth_yoy,-8.2,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2020Q4,gdp_growth_yoy_accel,3.4,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2020Q4,gdp_level,4.8256e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2020Q4,gdp_level,4825596,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2020Q4,gdp_growth_qoq,16.6872,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
-2020Q4,cpi_index,106.267,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
+2020Q4,cpi_index,106.2667,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2020Q4,inflation_yoy,2.8719,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2020Q4,inflation_yoy_accel,0.563,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2020Q4,growth_employment_gap,-6.557,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
@@ -889,9 +889,9 @@ quarter_id,indicator_code,value,value_status,source_file
 2021Q1,underemployment_change_yoy,1.167,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2021Q1,gdp_growth_yoy,-3.8,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2021Q1,gdp_growth_yoy_accel,4.4,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2021Q1,gdp_level,4.2668e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2021Q1,gdp_level,4266797,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2021Q1,gdp_growth_qoq,-11.5799,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
-2021Q1,cpi_index,108.367,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
+2021Q1,cpi_index,108.3667,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2021Q1,inflation_yoy,4.032,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2021Q1,inflation_yoy_accel,1.1601,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2021Q1,growth_employment_gap,-2.633,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
@@ -903,9 +903,9 @@ quarter_id,indicator_code,value,value_status,source_file
 2021Q2,underemployment_change_yoy,-1.688,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2021Q2,gdp_growth_yoy,12,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2021Q2,gdp_growth_yoy_accel,15.8,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2021Q2,gdp_level,4.64182e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2021Q2,gdp_level,4641825,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2021Q2,gdp_growth_qoq,8.7895,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
-2021Q2,cpi_index,108.167,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
+2021Q2,cpi_index,108.1667,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2021Q2,inflation_yoy,4.0064,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2021Q2,inflation_yoy_accel,-0.0256,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2021Q2,growth_employment_gap,10.312,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
@@ -917,9 +917,9 @@ quarter_id,indicator_code,value,value_status,source_file
 2021Q3,underemployment_change_yoy,3.765,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2021Q3,gdp_growth_yoy,7,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2021Q3,gdp_growth_yoy_accel,-5,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2021Q3,gdp_level,4.42663e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2021Q3,gdp_level,4426630,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2021Q3,gdp_growth_qoq,-4.636,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
-2021Q3,cpi_index,109.167,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
+2021Q3,cpi_index,109.1667,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2021Q3,inflation_yoy,4.1004,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2021Q3,inflation_yoy_accel,0.094,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2021Q3,growth_employment_gap,10.765,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
@@ -931,9 +931,9 @@ quarter_id,indicator_code,value,value_status,source_file
 2021Q4,underemployment_change_yoy,1.646,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2021Q4,gdp_growth_yoy,7.9,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2021Q4,gdp_growth_yoy_accel,0.9,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2021Q4,gdp_level,5.20483e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2021Q4,gdp_level,5204832,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2021Q4,gdp_growth_qoq,17.58,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
-2021Q4,cpi_index,110.067,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
+2021Q4,cpi_index,110.0667,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2021Q4,inflation_yoy,3.5759,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2021Q4,inflation_yoy_accel,-0.5245,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2021Q4,growth_employment_gap,9.546,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
@@ -945,7 +945,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2022Q1,underemployment_change_yoy,-1.107,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2022Q1,gdp_growth_yoy,8.1,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2022Q1,gdp_growth_yoy_accel,0.2,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2022Q1,gdp_level,4.61122e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2022Q1,gdp_level,4611219,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2022Q1,gdp_growth_qoq,-11.405,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2022Q1,cpi_index,112,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2022Q1,inflation_yoy,3.3528,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -959,9 +959,9 @@ quarter_id,indicator_code,value,value_status,source_file
 2022Q2,underemployment_change_yoy,-3.201,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2022Q2,gdp_growth_yoy,7.5,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2022Q2,gdp_growth_yoy_accel,-0.6,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2022Q2,gdp_level,4.99093e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2022Q2,gdp_level,4990934,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2022Q2,gdp_growth_qoq,8.2346,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
-2022Q2,cpi_index,114.067,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
+2022Q2,cpi_index,114.0667,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2022Q2,inflation_yoy,5.4545,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2022Q2,inflation_yoy_accel,2.1017,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2022Q2,growth_employment_gap,4.299,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
@@ -973,7 +973,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2022Q3,underemployment_change_yoy,-7.237,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2022Q3,gdp_growth_yoy,7.7,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2022Q3,gdp_growth_yoy_accel,0.2,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2022Q3,gdp_level,4.76755e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2022Q3,gdp_level,4767549,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2022Q3,gdp_growth_qoq,-4.4758,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2022Q3,cpi_index,116.3,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2022Q3,inflation_yoy,6.5344,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -987,9 +987,9 @@ quarter_id,indicator_code,value,value_status,source_file
 2022Q4,underemployment_change_yoy,-1.911,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2022Q4,gdp_growth_yoy,7.1,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2022Q4,gdp_growth_yoy_accel,-0.6,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2022Q4,gdp_level,5.5759e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2022Q4,gdp_level,5575902,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2022Q4,gdp_growth_qoq,16.9553,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
-2022Q4,cpi_index,118.767,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
+2022Q4,cpi_index,118.7667,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2022Q4,inflation_yoy,7.9043,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2022Q4,inflation_yoy_accel,1.3699,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2022Q4,growth_employment_gap,5.189,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
@@ -1001,7 +1001,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2023Q1,underemployment_change_yoy,-0.813,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2023Q1,gdp_growth_yoy,6.4,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2023Q1,gdp_growth_yoy_accel,-0.7,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2023Q1,gdp_level,4.90701e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2023Q1,gdp_level,4907013,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2023Q1,gdp_growth_qoq,-11.9961,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2023Q1,cpi_index,121.3,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2023Q1,inflation_yoy,8.3036,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -1015,9 +1015,9 @@ quarter_id,indicator_code,value,value_status,source_file
 2023Q2,underemployment_change_yoy,-1.114,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2023Q2,gdp_growth_yoy,4.3,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2023Q2,gdp_growth_yoy_accel,-2.1,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2023Q2,gdp_level,5.20346e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2023Q2,gdp_level,5203455,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2023Q2,gdp_growth_qoq,6.0412,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
-2023Q2,cpi_index,120.967,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
+2023Q2,cpi_index,120.9667,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2023Q2,inflation_yoy,6.0491,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2023Q2,inflation_yoy_accel,-2.2545,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2023Q2,growth_employment_gap,3.186,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
@@ -1029,9 +1029,9 @@ quarter_id,indicator_code,value,value_status,source_file
 2023Q3,underemployment_change_yoy,2.059,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2023Q3,gdp_growth_yoy,6,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2023Q3,gdp_growth_yoy_accel,1.7,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2023Q3,gdp_level,5.0514e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2023Q3,gdp_level,5051396,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2023Q3,gdp_growth_qoq,-2.9223,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
-2023Q3,cpi_index,122.533,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
+2023Q3,cpi_index,122.5333,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2023Q3,inflation_yoy,5.3597,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2023Q3,inflation_yoy_accel,-0.6894,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2023Q3,growth_employment_gap,8.059,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
@@ -1043,7 +1043,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2023Q4,underemployment_change_yoy,-2.45,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2023Q4,gdp_growth_yoy,5.5,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2023Q4,gdp_growth_yoy_accel,-0.5,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2023Q4,gdp_level,5.88453e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2023Q4,gdp_level,5884529,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2023Q4,gdp_growth_qoq,16.4931,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2023Q4,cpi_index,123.9,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2023Q4,inflation_yoy,4.3222,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -1057,7 +1057,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2024Q1,underemployment_change_yoy,-0.336,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2024Q1,gdp_growth_yoy,5.9,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2024Q1,gdp_growth_yoy_accel,0.4,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2024Q1,gdp_level,5.19679e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2024Q1,gdp_level,5196789,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2024Q1,gdp_growth_qoq,-11.6873,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2024Q1,cpi_index,125.3,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2024Q1,inflation_yoy,3.2976,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -1071,9 +1071,9 @@ quarter_id,indicator_code,value,value_status,source_file
 2024Q2,underemployment_change_yoy,1.644,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2024Q2,gdp_growth_yoy,6.5,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2024Q2,gdp_growth_yoy_accel,0.6,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2024Q2,gdp_level,5.54017e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2024Q2,gdp_level,5540172,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2024Q2,gdp_growth_qoq,6.6076,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
-2024Q2,cpi_index,125.567,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
+2024Q2,cpi_index,125.5667,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2024Q2,inflation_yoy,3.8027,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2024Q2,inflation_yoy_accel,0.5051,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2024Q2,growth_employment_gap,8.144,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
@@ -1085,9 +1085,9 @@ quarter_id,indicator_code,value,value_status,source_file
 2024Q3,underemployment_change_yoy,-3.758,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2024Q3,gdp_growth_yoy,5.3,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2024Q3,gdp_growth_yoy_accel,-1.2,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2024Q3,gdp_level,5.31674e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2024Q3,gdp_level,5316739,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2024Q3,gdp_growth_qoq,-4.033,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
-2024Q3,cpi_index,126.467,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
+2024Q3,cpi_index,126.4667,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2024Q3,inflation_yoy,3.21,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2024Q3,inflation_yoy_accel,-0.5927,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2024Q3,growth_employment_gap,1.542,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
@@ -1099,9 +1099,9 @@ quarter_id,indicator_code,value,value_status,source_file
 2024Q4,underemployment_change_yoy,0.92,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2024Q4,gdp_growth_yoy,5.3,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2024Q4,gdp_growth_yoy_accel,0,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2024Q4,gdp_level,6.19544e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2024Q4,gdp_level,6195440,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2024Q4,gdp_growth_qoq,16.5271,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
-2024Q4,cpi_index,127.067,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
+2024Q4,cpi_index,127.0667,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2024Q4,inflation_yoy,2.5558,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2024Q4,inflation_yoy_accel,-0.6542,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2024Q4,growth_employment_gap,6.22,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
@@ -1113,7 +1113,7 @@ quarter_id,indicator_code,value,value_status,source_file
 2025Q1,underemployment_change_yoy,-0.374,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2025Q1,gdp_growth_yoy,5.4,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2025Q1,gdp_growth_yoy_accel,0.1,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2025Q1,gdp_level,5.47593e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2025Q1,gdp_level,5475926,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2025Q1,gdp_growth_qoq,-11.6136,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2025Q1,cpi_index,128.1,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2025Q1,inflation_yoy,2.2346,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
@@ -1127,9 +1127,9 @@ quarter_id,indicator_code,value,value_status,source_file
 2025Q2,underemployment_change_yoy,0.016,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2025Q2,gdp_growth_yoy,5.4,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2025Q2,gdp_growth_yoy_accel,0,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2025Q2,gdp_level,5.84178e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2025Q2,gdp_level,5841784,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2025Q2,gdp_growth_qoq,6.6812,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
-2025Q2,cpi_index,127.267,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
+2025Q2,cpi_index,127.2667,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2025Q2,inflation_yoy,1.3539,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2025Q2,inflation_yoy_accel,-0.8808,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2025Q2,growth_employment_gap,5.416,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
@@ -1141,9 +1141,9 @@ quarter_id,indicator_code,value,value_status,source_file
 2025Q3,underemployment_change_yoy,2.667,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2025Q3,gdp_growth_yoy,4,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2025Q3,gdp_growth_yoy_accel,-1.4,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2025Q3,gdp_level,5.52867e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2025Q3,gdp_level,5528671,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2025Q3,gdp_growth_qoq,-5.3599,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
-2025Q3,cpi_index,128.233,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
+2025Q3,cpi_index,128.2333,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2025Q3,inflation_yoy,1.3969,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2025Q3,inflation_yoy_accel,0.0431,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2025Q3,growth_employment_gap,6.667,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
@@ -1155,9 +1155,9 @@ quarter_id,indicator_code,value,value_status,source_file
 2025Q4,underemployment_change_yoy,-0.681,derived,psa_openstat_lfs_underemployment_0021B3FKEI2_2026-08-02_part1.csv
 2025Q4,gdp_growth_yoy,3,observed,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
 2025Q4,gdp_growth_yoy_accel,-1,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv
-2025Q4,gdp_level,6.38226e+06,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
+2025Q4,gdp_level,6382257,observed,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
 2025Q4,gdp_growth_qoq,15.4393,derived,psa_openstat_qna_gdp_levels_0052B5BPRQ1_2026-08-02.csv
-2025Q4,cpi_index,129.167,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
+2025Q4,cpi_index,129.1667,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2025Q4,inflation_yoy,1.6527,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2025Q4,inflation_yoy_accel,0.2557,derived,psa_openstat_cpi_index_2018_2025_0012M4ACP09_2026-08-02.csv
 2025Q4,growth_employment_gap,2.319,derived,psa_openstat_qna_gdp_growth_0062B5BPRQ2_2026-08-02.csv

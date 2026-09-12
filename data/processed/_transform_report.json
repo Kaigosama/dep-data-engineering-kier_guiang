@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-08-13T15:15:15+00:00",
+  "generated_at_utc": "2026-09-12T09:06:13+00:00",
   "pandas_version": "3.0.5",
   "window": {
     "start": "2005Q2",
@@ -30,19 +30,19 @@
   "outputs": [
     {
       "file": "dim_quarter.csv",
-      "sha256": "a2cfd4f22f655bf59a210820a040970472e64a12ecf638d0b142430265b8570e"
+      "sha256": "0c0f34be4b198febf60785d183b1ec073be6b2a3a833e9925c0da9aa1d8cec51"
     },
     {
       "file": "dim_indicator.csv",
-      "sha256": "056532e769bf040ba3756195ada84de88e905d64edb1da7895a22243dc9fd7b6"
+      "sha256": "16141368e28bf16616c2275c50000f480c330edd4b71e19adc23dd9bc0fe64f2"
     },
     {
       "file": "fact_indicator_quarter.csv",
-      "sha256": "b98106af57c287248692a03398bd8178ce143151b693fcd6ecaf5dec6666f216"
+      "sha256": "7d79d4a2cd4f24ef41016383a995f78f51b67987ccef433a4d9853178acc9533"
     },
     {
       "file": "analysis_quarterly.csv",
-      "sha256": "9ed90d50fad4c665ca69f6a5174d904a8d18e505af230abe843f42dfb5fc1632"
+      "sha256": "c003a4e1c496f6361600b7491ade4092a4ef440cca7bcda0e37145cc7ed81c11"
     }
   ],
   "row_counts": {
