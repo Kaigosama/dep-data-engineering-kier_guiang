@@ -24,3 +24,4 @@ data/processed/*.db
 #
 # NOTE: data/processed/*.csv is also deliberately NOT ignored.
 # The Milestone 3 deliverable is the processed dataset itself.
+venv-wsl/
