@@ -229,16 +229,13 @@ def read_raw(path: Path) -> pd.DataFrame:
                        na_values=sorted(MISSING_MARKERS), keep_default_na=False)
 
 
-def assert_contiguous(series: pd.Series, label: str) -> pd.Series:
+def assert_contiguous(series: pd.Series) -> pd.Series:
     """Reindex onto FULL_SPAN so .shift() steps by quarters, not by rows.
 
     This is the guard for the trap in the module docstring: shifting a series
     with a hole in its index differences against the wrong period and looks fine.
     """
-    reindexed = series.reindex(FULL_SPAN)
-    if not reindexed.index.is_monotonic_increasing:
-        raise TransformError(f"{label}: index is not sorted after reindexing.")
-    return reindexed
+    return series.reindex(FULL_SPAN)
 
 
 # --------------------------------------------------------------------------- #
@@ -299,7 +296,7 @@ def read_lfs(paths: list[Path]) -> dict[str, pd.Series]:
     for column, code in wanted.items():
         values = pd.to_numeric(rounds[column], errors="coerce")
         values.index = index
-        series[code] = assert_contiguous(values.dropna().sort_index(), code)
+        series[code] = assert_contiguous(values.dropna().sort_index())
     return series
 
 
@@ -345,7 +342,7 @@ def read_gdp_growth(path: Path) -> pd.Series:
         )
     index = pd.PeriodIndex(long[1] + "Q" + long[2], freq="Q")
     series = pd.Series(long["value"].values, index=index, name="gdp_growth_yoy")
-    return assert_contiguous(series.dropna().sort_index(), "gdp_growth_yoy")
+    return assert_contiguous(series.dropna().sort_index())
 
 
 def read_gdp_levels(path: Path) -> pd.Series:
@@ -353,7 +350,7 @@ def read_gdp_levels(path: Path) -> pd.Series:
     long = melt_periods(path, GDP_LEVEL_COLUMNS)
     index = pd.PeriodIndex(long[0] + "Q" + long[1], freq="Q")
     series = pd.Series(long["value"].values, index=index, name="gdp_level")
-    return assert_contiguous(series.dropna().sort_index(), "gdp_level")
+    return assert_contiguous(series.dropna().sort_index())
 
 
 def read_cpi_quarterly(paths: list[Path]) -> pd.Series:
@@ -366,10 +363,7 @@ def read_cpi_quarterly(paths: list[Path]) -> pd.Series:
     A quarter needs all three of its months: one built from two is not comparable
     with one built from three, so a partial quarter is dropped, not averaged.
     """
-    parts = [melt_periods(path, CPI_COLUMNS) for path in paths]
-    long = pd.concat(parts, ignore_index=True)
-    long["month"] = long[1].map({abbr: i + 1 for i, abbr in enumerate(MONTH_ABBR)})
-    long = long.dropna(subset=["month", "value"])
+    long = read_cpi_monthly(paths)
 
     duplicated = long.duplicated(subset=[0, "month"])
     if duplicated.any():
@@ -379,12 +373,27 @@ def read_cpi_quarterly(paths: list[Path]) -> pd.Series:
             f"current legs abut at 2017-12 / 2018-01; an overlap would double-count."
         )
 
-    quarter = pd.PeriodIndex(
-        long[0] + "Q" + ((long["month"].astype(int) - 1) // 3 + 1).astype(str), freq="Q"
-    )
-    grouped = long.groupby(quarter)["value"]
-    complete = grouped.mean().where(grouped.count() == 3).dropna()
-    return assert_contiguous(complete.sort_index(), "cpi_index")
+    complete = complete_quarter_mean(long["value"], quarter_of(long[0], long["month"]))
+    return assert_contiguous(complete.sort_index())
+
+
+def read_cpi_monthly(paths: list[Path]) -> pd.DataFrame:
+    """Melt CPI-layout extracts to one row per month; the 'Ave' columns drop out."""
+    long = pd.concat([melt_periods(path, CPI_COLUMNS) for path in paths],
+                     ignore_index=True)
+    long["month"] = long[1].map({abbr: i + 1 for i, abbr in enumerate(MONTH_ABBR)})
+    return long.dropna(subset=["month", "value"])
+
+
+def quarter_of(year: pd.Series, month: pd.Series) -> pd.PeriodIndex:
+    return pd.PeriodIndex(
+        year.astype(str) + "Q" + ((month.astype(int) - 1) // 3 + 1).astype(str), freq="Q")
+
+
+def complete_quarter_mean(values: pd.Series, quarters: pd.PeriodIndex) -> pd.Series:
+    """Quarterly mean of monthly values, kept only where all three months exist."""
+    grouped = values.groupby(quarters)
+    return grouped.mean().where(grouped.count() == 3).dropna()
 
 
 # --------------------------------------------------------------------------- #
@@ -522,15 +531,8 @@ def check_inflation_against_psa(inflation: pd.Series,
     right. Nothing else would catch a mis-joined backcast leg - the numbers would
     simply be wrong and entirely plausible.
     """
-    long = melt_periods(files["cpi_yoy_official_validation"][0], CPI_COLUMNS)
-    long["month"] = long[1].map({abbr: i + 1 for i, abbr in enumerate(MONTH_ABBR)})
-    long = long.dropna(subset=["month", "value"])
-
-    quarter = pd.PeriodIndex(
-        long[0] + "Q" + ((long["month"].astype(int) - 1) // 3 + 1).astype(str), freq="Q"
-    )
-    grouped = long.groupby(quarter)["value"]
-    official = grouped.mean().where(grouped.count() == 3).dropna()
+    long = read_cpi_monthly(files["cpi_yoy_official_validation"])
+    official = complete_quarter_mean(long["value"], quarter_of(long[0], long["month"]))
 
     comparison = pd.DataFrame({"ours": inflation, "psa": official}).dropna()
     if comparison.empty:
@@ -567,12 +569,8 @@ def check_lfs_estimator(files: dict[str, list[Path]]) -> dict:
     frame["value"] = pd.to_numeric(frame["Underemployment Rate Both sexes"],
                                    errors="coerce")
     frame = frame.dropna(subset=["value"])
-    frame["quarter"] = pd.PeriodIndex(
-        frame["Year"].astype(str) + "Q" + ((frame["month"] - 1) // 3 + 1).astype(str),
-        freq="Q")
-
-    grouped = frame.groupby("quarter")["value"]
-    full = grouped.mean().where(grouped.count() == 3).dropna()
+    frame["quarter"] = quarter_of(frame["Year"], frame["month"])
+    full = complete_quarter_mean(frame["value"], frame["quarter"])
 
     is_round = frame["month"].isin([1, 4, 7, 10])
     round_value = frame[is_round].set_index("quarter")["value"]
