@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-09-12T09:06:13+00:00",
+  "generated_at_utc": "2026-10-12T01:11:30+00:00",
   "pandas_version": "3.0.5",
   "window": {
     "start": "2005Q2",
@@ -38,7 +38,7 @@
     },
     {
       "file": "fact_indicator_quarter.csv",
-      "sha256": "7d79d4a2cd4f24ef41016383a995f78f51b67987ccef433a4d9853178acc9533"
+      "sha256": "eb2a482ef60c5d47f8080e93be298da5b4dec6187921d29f0af77b4b5e2ed5c4"
     },
     {
       "file": "analysis_quarterly.csv",

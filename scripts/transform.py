@@ -820,10 +820,25 @@ def build_fact(frame: pd.DataFrame, files: dict[str, list[Path]]) -> pd.DataFram
         "missing" if pd.isna(value) else "observed" if code in OBSERVED else "derived"
         for code, value in zip(fact["indicator_code"], fact["value"])
     ]
-    # Each indicator traces back to the raw file it came from, so a value in the
-    # fact can be walked back to a pull without consulting the manifest.
-    raw_file_of = {spec[0]: files[spec[3]][0].name for spec in INDICATORS}
-    fact["source_file"] = fact["indicator_code"].map(raw_file_of).astype(str)
+    # Each value traces back to the raw file holding that quarter, so it can be
+    # walked back to a pull without consulting the manifest. Two series span
+    # several files - LFS split by year into parts, CPI stitched from two legs -
+    # so for those the file is looked up by year rather than taken as the first.
+    by_year = {
+        "lfs_underemployment": {int(year): path.name
+                                for path in files["lfs_underemployment"]
+                                for year in read_raw(path)["Year"]},
+        "cpi_index_2018_2025": {int(year): path.name
+                                for path in (files["cpi_index_backcast_1994_2017"]
+                                             + files["cpi_index_2018_2025"])
+                                for year in melt_periods(path, CPI_COLUMNS)[0]},
+    }
+    dataset_of = {spec[0]: spec[3] for spec in INDICATORS}
+    fact["source_file"] = [
+        by_year[dataset][quarter.year] if dataset in by_year else files[dataset][0].name
+        for quarter, dataset in zip(fact["quarter"],
+                                    fact["indicator_code"].astype(str).map(dataset_of))
+    ]
     return fact
 
 

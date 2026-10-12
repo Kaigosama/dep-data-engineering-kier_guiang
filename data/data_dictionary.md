@@ -400,7 +400,7 @@ Indicator rows, and which are model inputs:
 | `indicator_code` | FK to `dim_indicator` | string |
 | `value` | the observation; **null where genuinely absent** | float, nullable |
 | `value_status` | `observed` (as published) / `derived` (computed here) / `missing` | string |
-| `source_file` | the `data/raw/` filename this traces back to | string |
+| `source_file` | the `data/raw/` file holding this quarter: LFS picks `_part1`/`_part2` by year, CPI picks the backcast leg before 2018 (cleaning-log entry 15) | string |
 
 Nulls stay null. A quarter with no survey round is not a zero, and the target must never be imputed
 into.

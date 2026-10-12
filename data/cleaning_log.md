@@ -286,6 +286,31 @@ different line endings, `-text` stores it faithfully and the manifest records wh
 
 ---
 
+## 15. `source_file` names the file that holds the quarter, and a pull is identified by its day
+
+**Rule.** In `fact_indicator_quarter`, `source_file` is looked up by year for the two series that
+span several raw files: LFS rows come from `_part1` (2005–2023) or `_part2` (2024–2026), and CPI
+rows before 2018 come from the backcast leg. `transform.py` selects the newest pull per dataset by
+the UTC **date** of `retrieved_at_utc`, and `ingest.py` now stamps every chunk of a table with one
+timestamp.
+
+**Why.** `source_file` used to take the first file of each dataset, so it named `_part1` for
+2024Q1–2025Q4 and the 2018–2025 CPI table for 2005Q2–2017Q4: 201 of 1 162 fact rows pointed at a
+file that does not contain them. Separately, `ingest.py` stamped each chunk when its response
+arrived, to the second, and `transform.py` kept only records carrying the newest stamp. A live
+check on 2026-10-12 measured the two LFS chunks **216 ms apart**, so roughly one pull in five
+would stamp them a second apart and silently discard `_part1`. The validation would then fail on
+the null pattern with a message blaming the source.
+
+**Evidence.** Only the `source_file` column changed: the first four columns of the fact are
+byte-identical to the previous commit. `tests/test_transform.py` fails on the old selection logic
+and passes on the new one.
+
+**What would change this.** A table split along something other than time, which would need a
+lookup by that variable instead of by year.
+
+---
+
 ## Reproducibility
 
 `python scripts/transform.py --check-reproducible` rebuilds the entire processed layer into a
