@@ -6,3 +6,9 @@ requests>=2.32
 # transform.py reads and reshapes the raw extracts with pandas.
 # load_db.py and run_sql.py use sqlite3 from the standard library - no driver needed.
 pandas>=2.2
+
+# Phase 4 - Analysis & Insights
+# notebooks/04_insights.ipynb: charts with matplotlib, executed with jupyter (nbconvert + ipykernel).
+# The inference tests use numpy, which pandas already installs.
+matplotlib>=3.9
+jupyter>=1.1

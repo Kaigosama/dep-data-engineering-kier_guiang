@@ -287,6 +287,35 @@ code produces.
   it, that *is* the jobless-growth finding, and the dashboard ships as a growth-employment-gap
   monitor. This is on record before any model is fitted, on purpose.
 
+## Analysis & Insights (Phase 4)
+
+**[`notebooks/04_insights.ipynb`](notebooks/04_insights.ipynb)** answers the problem statement from
+`analysis_quarterly.csv`: summary statistics, four charts (saved to
+[`output/figures/`](output/figures/)), one inference check, and an Observation / Implication /
+Possible Action write-up under every chart. It is committed with its outputs, so it reads on GitHub
+without running anything.
+
+Headline findings, 2005Q2–2025Q4:
+
+- **Not anticipated.** Last quarter's GDP growth and inflation show no detectable relationship with the
+  next quarter's change in underemployment (r = −0.00 and −0.09; permutation p = 0.99 and 0.40).
+  This is the null result anticipated in "Two decisions worth flagging" above. Excluding 2020–21,
+  a test that keeps the time order finds weak evidence that faster growth precedes slightly larger
+  falls (r = −0.16, p = 0.07): a hypothesis to re-test, not a finding.
+- **The calendar is the biggest predictable part.** Underemployment falls 1.67 pp on average in the
+  October round and rises 0.72 pp in January.
+- **Jobless growth recurs.** In 25 of 79 quarters the economy grew while underemployment was higher
+  than a year earlier — the growth-employment gap the Phase 5 dashboard will monitor.
+
+Re-run it (after the pipeline, from the repository root):
+
+```bash
+jupyter nbconvert --to notebook --execute --inplace notebooks/04_insights.ipynb
+```
+
+The last cell recomputes every number the text quotes and fails if any has moved, so a re-run
+after a new PSA pull flags stale prose instead of leaving it.
+
 ## How To Run
 
 Requires **Python 3.11 or newer** (built and tested on 3.13). No database server, no API key, no
@@ -308,8 +337,8 @@ On macOS or Linux, activate with `source venv/bin/activate` instead.
 pip install -r requirements.txt
 ```
 
-Two dependencies: `requests` for ingestion, `pandas` for transformation. Everything else is the
-standard library.
+`requests` for ingestion, `pandas` for transformation, `matplotlib` and `jupyter` for the Phase 4
+notebook. Everything else is the standard library.
 
 ### Run the pipeline
 
@@ -376,8 +405,12 @@ sql/
   business_questions.sql  3 business questions + 1 data-quality check
 output/
   sql_results.md        the answers, committed so they are readable without running anything
+  figures/              the four Phase 4 charts, written by the notebook
 dashboard/              Phase 5
-notebooks/              Phase 4
+notebooks/
+  04_insights.ipynb     Phase 4: summary statistics, charts, inference check, takeaways
+tests/
+  test_transform.py     raw-file selection from the manifest (python -m unittest discover tests)
 ```
 
 `data/processed/underemployment.db` is a build artefact and is gitignored — it is rebuilt from the
