@@ -208,7 +208,7 @@ python -c "import json,hashlib,pathlib;r=pathlib.Path('data/raw');[print(hashlib
 
 Every line should print `True`. See cleaning-log entry 14 for why this needed pinning.
 
-## Processed Data Plan (Phase 3, Week 7)
+## Processed Data Plan (Phase 3)
 
 Full schema — every column, type, key and null expectation — is in
 **[`data/data_dictionary.md` → Processed layer schema](data/data_dictionary.md#processed-layer-schema)**.
