@@ -398,7 +398,10 @@ def request_with_retry(
                 f"exist at that path. PSA may have moved or renamed it."
             )
 
-        response.raise_for_status()
+        # Any other failure becomes an IngestError so main() still writes the
+        # manifest for the tables already pulled - their raw files are on disk.
+        if not response.ok:
+            raise IngestError(f"{method} {url} returned HTTP {response.status_code}.")
         return response
 
     raise IngestError(f"{method} {url} failed after {MAX_ATTEMPTS} attempts: {last_error}")
