@@ -409,3 +409,10 @@ writes LF explicitly and `.gitattributes` pins every text file to LF on checkout
 `core.autocrlf`, so the committed bytes and a rebuild agree on Windows, macOS and Linux alike. If
 `git status` reports CSVs as modified immediately after cloning on Windows, the checkout predates
 `.gitattributes`; run `git add --renormalize .` once.
+
+```bash
+python -m unittest discover tests
+```
+
+Checks that `transform.py` picks every chunk of the newest pull from the manifest, even when the
+chunks were stamped a second apart (cleaning-log entry 15).

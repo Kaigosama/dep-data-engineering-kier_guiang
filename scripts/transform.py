@@ -189,12 +189,16 @@ def resolve_latest_raw_files() -> dict[str, list[Path]]:
         )
 
     records = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
-    latest = pd.DataFrame(records).groupby("name")["retrieved_at_utc"].max()
+    # A pull is identified by its UTC date - the key ingest.py de-duplicates the
+    # manifest on - not by the exact second, which can differ between the chunks
+    # of one pull and would drop every chunk but the last.
+    latest = pd.DataFrame(records).assign(
+        day=lambda m: m["retrieved_at_utc"].str[:10]).groupby("name")["day"].max()
 
     files: dict[str, list[Path]] = {}
     for record in sorted(records, key=lambda r: r["chunk"]):
         name = record["name"]
-        if record["retrieved_at_utc"] != latest[name]:
+        if record["retrieved_at_utc"][:10] != latest[name]:
             continue
         path = RAW_DATA_DIR / record["output_file"]
         if not path.exists():

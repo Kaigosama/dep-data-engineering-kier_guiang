@@ -645,6 +645,10 @@ def fetch_table(
     meta_path = RAW_DATA_DIR / f"{stem}_meta.json"
     meta_path.write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
 
+    # One timestamp per table, not per chunk: transform.py treats records with the
+    # same timestamp as one pull, and chunks fetched ~0.2 s apart can straddle a
+    # second boundary.
+    retrieved_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
     records: list[dict] = []
     for index, chunk in enumerate(chunks, start=1):
         body = build_query_body(chunk)
@@ -668,7 +672,7 @@ def fetch_table(
             "title": title,
             "source_url": spec.url,
             "query_body": body,          # exact parameters sent - reproducible
-            "retrieved_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "retrieved_at_utc": retrieved_at,
             "http_status": response.status_code,
             "cells_requested": cells,
             "output_file": out_path.name,
