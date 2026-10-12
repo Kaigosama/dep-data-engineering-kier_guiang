@@ -707,19 +707,26 @@ def read_pxweb_csv(path: Path) -> tuple[list[str], list[list[str]]]:
     return rows[0], [r for r in rows[1:] if r]
 
 
-def preview(name: str, today: str, limit: int = 12) -> int:
+def preview(name: str, date: str | None, limit: int = 12) -> int:
     """Print a saved raw pull as a table, plus a coverage profile per period.
 
     The profile is the point: PXWeb hands back a dense rectangle of Year x Month
     whether or not the survey actually ran in a given month, so the only way to
     know your real observation frequency is to count the non-missing cells.
+
+    With no date, previews the newest pull on disk - not today's, which usually
+    does not exist.
     """
     spec = next((s for s in TABLES if s.name == name), None)
     if spec is None:
         print(f"Unknown table '{name}'. Options: {[s.name for s in TABLES]}")
         return 1
 
-    stem = _stem(spec, today)
+    if date is None:
+        dates = [m.group(1) for p in RAW_DATA_DIR.glob(f"{_stem(spec, '')}*.csv")
+                 if (m := re.search(r"_(\d{4}-\d{2}-\d{2})(?:_part\d+)?\.csv$", p.name))]
+        date = max(dates, default="")
+    stem = _stem(spec, date)
     paths = sorted(RAW_DATA_DIR.glob(f"{stem}*.csv"))
     if not paths:
         print(f"No raw files matching '{stem}*.csv'. Run the ingest first.")
@@ -844,7 +851,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if args.preview:
-        return preview(args.preview, today)
+        return preview(args.preview, args.date)
 
     specs = TABLES
     if args.only:
