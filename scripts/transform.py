@@ -1004,7 +1004,7 @@ def run_pipeline(files: dict[str, list[Path]], out_dir: Path,
                                  for code in sorted(CODES)},
         "diagnostics": diagnostics,
         "checks_passed": checks,
-    }, indent=2), encoding="utf-8")
+    }, indent=2), encoding="utf-8", newline="\n")
 
     return {"outputs": outputs, "checks": checks, "diagnostics": diagnostics,
             "quarters": len(frame), "fact_rows": len(fact)}

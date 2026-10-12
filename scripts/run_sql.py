@@ -142,7 +142,9 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"\n{number}. {question}\n")
                 print(as_markdown_table(columns, rows))
 
-    OUTPUT_PATH.write_text("\n".join(sections), encoding="utf-8")
+    # LF, matching .gitattributes - the default on Windows is CRLF, which leaves
+    # the file showing as modified after every run with no content change.
+    OUTPUT_PATH.write_text("\n".join(sections), encoding="utf-8", newline="\n")
     print(f"wrote {OUTPUT_PATH.relative_to(PROJECT_ROOT)} "
           f"({len(blocks)} questions answered)")
     return 0
